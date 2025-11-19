@@ -49,17 +49,20 @@ class SheetsService {
           'Email',
           'Phone',
           'Pickup Date',
-          'Sofganiyot ($4.00) - Qty',
-          'Sofganiyot ($4.00) - Flavor',
-          'Sofganiyot ($4.50) - Qty',
-          'Sofganiyot ($4.50) - Flavor',
-          'Cake Pops - Qty',
-          'Chocolate Covered Pretzels - Qty',
-          'Decorated Cookies - Qty',
-          'Plain Hanukkah Cookies - Qty',
-          'Cookie Decorating Kits - Qty',
+          'Sofganiyot - Strawberry Jam',
+          'Sofganiyot - Nutella',
+          'Sofganiyot - Dulce de Leche',
+          'Sofganiyot - Vanilla Custard',
+          'Sofganiyot - Biscoff',
+          'Sofganiyot - Marshmallows',
+          'Cake Pops',
+          'Chocolate Covered Pretzels',
+          'Decorated Cookies',
+          'Plain Hanukkah Cookies',
+          'Cookie Decorating Kits',
           'Special Instructions',
-          'Total Items'
+          'Total Items',
+          'Total Amount'
         ];
 
         await this.sheets.spreadsheets.values.update({
@@ -72,7 +75,7 @@ class SheetsService {
         });
 
         // Apply formatting
-        await this.formatSheet(headers.length);
+        await this.formatSheet(20); // 20 columns total
 
         console.log('✅ Sheet headers created and formatted');
       }
@@ -218,38 +221,65 @@ class SheetsService {
         orderData.customer.pickupDate || '',
       ];
 
-      // Add each product quantity and flavor
-      const products = {
-        'sofganiyot-4': { qty: 0, flavor: '' },
-        'sofganiyot-4.5': { qty: 0, flavor: '' },
-        'cake-pops': { qty: 0, flavor: '' },
-        'pretzels': { qty: 0, flavor: '' },
-        'decorated-cookies': { qty: 0, flavor: '' },
-        'plain-cookies': { qty: 0, flavor: '' },
-        'cookie-kit': { qty: 0, flavor: '' },
+      // Initialize all product flavor columns
+      const productColumns = {
+        'sofganiyot-strawberry': 0,
+        'sofganiyot-nutella': 0,
+        'sofganiyot-dulce': 0,
+        'sofganiyot-vanilla': 0,
+        'sofganiyot-biscoff': 0,
+        'sofganiyot-marshmallows': 0,
+        'cake-pops': 0,
+        'pretzels': 0,
+        'decorated-cookies': 0,
+        'plain-cookies': 0,
+        'cookie-kit': 0,
       };
+
+      // Calculate total amount
+      let totalAmount = 0;
 
       // Fill in ordered items
       orderData.items.forEach(item => {
-        if (products[item.productId]) {
-          products[item.productId].qty = item.quantity;
-          products[item.productId].flavor = item.flavor || '';
+        totalAmount += item.quantity * item.price;
+
+        // Map products to their specific flavor columns
+        if (item.productId === 'sofganiyot-4') {
+          productColumns['sofganiyot-strawberry'] = item.quantity;
+        } else if (item.productId === 'sofganiyot-4.5') {
+          const flavorKey = this.getFlavorKey(item.flavor);
+          if (flavorKey) {
+            productColumns[flavorKey] = item.quantity;
+          }
+        } else if (item.productId === 'cake-pops') {
+          productColumns['cake-pops'] = item.quantity;
+        } else if (item.productId === 'pretzels') {
+          productColumns['pretzels'] = item.quantity;
+        } else if (item.productId === 'decorated-cookies') {
+          productColumns['decorated-cookies'] = item.quantity;
+        } else if (item.productId === 'plain-cookies') {
+          productColumns['plain-cookies'] = item.quantity;
+        } else if (item.productId === 'cookie-kit') {
+          productColumns['cookie-kit'] = item.quantity;
         }
       });
 
       // Add to row in correct order
       rowData.push(
-        products['sofganiyot-4'].qty || 0,
-        products['sofganiyot-4'].flavor || '',
-        products['sofganiyot-4.5'].qty || 0,
-        products['sofganiyot-4.5'].flavor || '',
-        products['cake-pops'].qty || 0,
-        products['pretzels'].qty || 0,
-        products['decorated-cookies'].qty || 0,
-        products['plain-cookies'].qty || 0,
-        products['cookie-kit'].qty || 0,
+        productColumns['sofganiyot-strawberry'],
+        productColumns['sofganiyot-nutella'],
+        productColumns['sofganiyot-dulce'],
+        productColumns['sofganiyot-vanilla'],
+        productColumns['sofganiyot-biscoff'],
+        productColumns['sofganiyot-marshmallows'],
+        productColumns['cake-pops'],
+        productColumns['pretzels'],
+        productColumns['decorated-cookies'],
+        productColumns['plain-cookies'],
+        productColumns['cookie-kit'],
         orderData.specialInstructions || '',
-        orderData.totalItems
+        orderData.totalItems,
+        `$${totalAmount.toFixed(2)}`
       );
 
       // Append to sheet
@@ -263,7 +293,7 @@ class SheetsService {
       });
 
       // Auto-resize columns after adding data
-      await this.autoResizeColumns(17); // 17 columns total
+      await this.autoResizeColumns(20); // 20 columns total
 
       console.log(`✅ Order ${orderId} added to Google Sheets`);
       return { success: true, orderId };
@@ -271,6 +301,17 @@ class SheetsService {
       console.error('❌ Error adding order to sheets:', error.message);
       throw error;
     }
+  }
+
+  getFlavorKey(flavor) {
+    const flavorMap = {
+      'Nutella': 'sofganiyot-nutella',
+      'Dulce de Leche': 'sofganiyot-dulce',
+      'Vanilla Custard': 'sofganiyot-vanilla',
+      'Biscoff': 'sofganiyot-biscoff',
+      'Marshmallows': 'sofganiyot-marshmallows',
+    };
+    return flavorMap[flavor] || null;
   }
 
   async autoResizeColumns(numColumns) {
