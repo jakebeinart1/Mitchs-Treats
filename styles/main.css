@@ -1106,7 +1106,8 @@ nav {
    Order Form Section
    =========================== */
 .order-form-section,
-.order-summary-section {
+.order-summary-section,
+.payment-options-section {
     background-color: var(--white);
     padding: var(--space-xl);
     border-radius: var(--radius-lg);
@@ -1119,6 +1120,84 @@ nav {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: var(--space-md);
     margin-bottom: var(--space-md);
+}
+
+/* ===========================
+   Payment Options Section
+   =========================== */
+.payment-subtitle {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--gray-medium);
+    margin-bottom: var(--space-xl);
+    font-family: 'Inter', sans-serif;
+}
+
+.payment-methods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+}
+
+.payment-card {
+    background: linear-gradient(135deg, var(--cream) 0%, var(--white) 100%);
+    border: 2px solid var(--primary-blue-light);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    text-align: center;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-sm);
+}
+
+.payment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-blue);
+}
+
+.payment-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+}
+
+.payment-card h3 {
+    color: var(--primary-blue);
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: var(--space-sm);
+}
+
+.payment-detail {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--gray-dark);
+    font-family: 'Inter', sans-serif;
+    margin-bottom: var(--space-xs);
+}
+
+.payment-note {
+    font-size: 0.875rem;
+    color: var(--gray-medium);
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+}
+
+.payment-notice {
+    background-color: var(--gray-light);
+    border-left: 4px solid var(--primary-blue);
+    padding: var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: 0.9375rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--gray-dark);
+    text-align: center;
+}
+
+.payment-notice strong {
+    color: var(--primary-blue);
+    font-weight: 700;
 }
 
 /* ===========================
@@ -1420,6 +1499,10 @@ nav {
 
     .notes-grid,
     .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-methods {
         grid-template-columns: 1fr;
     }
 
