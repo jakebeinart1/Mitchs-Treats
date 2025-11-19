@@ -34,51 +34,43 @@ class SheetsService {
 
   async ensureHeaders() {
     try {
-      // Check if headers exist
-      const response = await this.sheets.spreadsheets.values.get({
+      const headers = [
+        'Order ID',
+        'Timestamp',
+        'Customer Name',
+        'Email',
+        'Phone',
+        'Pickup Date',
+        'Sofganiyot - Strawberry Jam',
+        'Sofganiyot - Nutella',
+        'Sofganiyot - Dulce de Leche',
+        'Sofganiyot - Vanilla Custard',
+        'Sofganiyot - Biscoff',
+        'Sofganiyot - Marshmallows',
+        'Cake Pops',
+        'Chocolate Covered Pretzels',
+        'Decorated Cookies',
+        'Plain Hanukkah Cookies',
+        'Cookie Decorating Kits',
+        'Special Instructions',
+        'Total Items',
+        'Total Amount'
+      ];
+
+      // Always update headers to ensure they match current structure
+      await this.sheets.spreadsheets.values.update({
         spreadsheetId: this.sheetId,
-        range: 'Sheet1!A1:Z1',
+        range: 'Sheet1!A1:T1',
+        valueInputOption: 'RAW',
+        resource: {
+          values: [headers],
+        },
       });
 
-      // If no headers, create them
-      if (!response.data.values || response.data.values.length === 0) {
-        const headers = [
-          'Order ID',
-          'Timestamp',
-          'Customer Name',
-          'Email',
-          'Phone',
-          'Pickup Date',
-          'Sofganiyot - Strawberry Jam',
-          'Sofganiyot - Nutella',
-          'Sofganiyot - Dulce de Leche',
-          'Sofganiyot - Vanilla Custard',
-          'Sofganiyot - Biscoff',
-          'Sofganiyot - Marshmallows',
-          'Cake Pops',
-          'Chocolate Covered Pretzels',
-          'Decorated Cookies',
-          'Plain Hanukkah Cookies',
-          'Cookie Decorating Kits',
-          'Special Instructions',
-          'Total Items',
-          'Total Amount'
-        ];
+      // Apply formatting
+      await this.formatSheet(20); // 20 columns total
 
-        await this.sheets.spreadsheets.values.update({
-          spreadsheetId: this.sheetId,
-          range: 'Sheet1!A1',
-          valueInputOption: 'RAW',
-          resource: {
-            values: [headers],
-          },
-        });
-
-        // Apply formatting
-        await this.formatSheet(20); // 20 columns total
-
-        console.log('✅ Sheet headers created and formatted');
-      }
+      console.log('✅ Sheet headers updated and formatted');
     } catch (error) {
       console.error('Error ensuring headers:', error.message);
     }
