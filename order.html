@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Your Order - Mitch's Treats</title>
+    <meta name="description" content="Order handcrafted Hanukkah desserts from Mitch's Treats. Choose from sufganiyot, cookies, cake pops, and more!">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <img src="labels/logo.png" alt="Mitch's Treats Logo" class="logo-image">
+                <h1 class="logo">Mitch's Treats</h1>
+            </div>
+            <nav>
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="order.html" class="nav-link active">Order</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Order Page Content -->
+    <div class="order-page">
+        <div class="container">
+            <h1 class="page-title">Create Your Perfect Order</h1>
+            <p class="page-subtitle">Select your favorite treats below. Remember, orders must be placed at least one day in advance!</p>
+
+            <!-- Products Grid -->
+            <div id="products-grid" class="products-grid">
+                <!-- Products will be dynamically inserted here -->
+            </div>
+
+            <!-- Order Form -->
+            <section class="order-form-section">
+                <h2 class="section-title">Your Information</h2>
+                <form id="order-form" class="order-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customer-name">Name</label>
+                            <input type="text" id="customer-name" name="name" placeholder="Your name">
+                        </div>
+                        <div class="form-group">
+                            <label for="customer-email">Email *</label>
+                            <input type="email" id="customer-email" name="email" placeholder="your@email.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customer-phone">Phone *</label>
+                            <input type="tel" id="customer-phone" name="phone" placeholder="281-236-3047" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pickup-date">Pickup Date *</label>
+                            <input type="date" id="pickup-date" name="pickupDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="special-instructions">Special Instructions</label>
+                        <textarea id="special-instructions" name="specialInstructions" rows="4" placeholder="Any special requests or notes..."></textarea>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Order Summary -->
+            <section class="order-summary-section">
+                <h2 class="section-title">Order Summary</h2>
+                <div id="order-summary" class="order-summary">
+                    <p class="empty-cart">Your cart is empty. Select items above to get started!</p>
+                </div>
+                <div id="order-total" class="order-total" style="display: none;">
+                    <div class="total-row">
+                        <span>Total Items:</span>
+                        <span id="total-items">0</span>
+                    </div>
+                    <div class="total-row estimated">
+                        <span>Estimated Total:</span>
+                        <span id="total-price">$0.00</span>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="clear-order-btn" class="btn btn-secondary">Clear Order</button>
+                    <button type="submit" id="submit-order-btn" class="btn btn-primary" form="order-form">Submit Order</button>
+                </div>
+                <div id="order-message" class="order-message"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Mitch's Treats. All rights reserved.</p>
+            <p>Questions? Call us at <a href="tel:2812363047">281.236.3047</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="scripts/products.js"></script>
+    <script src="scripts/order.js"></script>
+</body>
+</html>
