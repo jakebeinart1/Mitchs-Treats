@@ -5,7 +5,8 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
-    "dev": "node server/server.js"
+    "dev": "node server/server.js",
+    "vercel-build": "echo 'Build complete'"
   },
   "keywords": ["orders", "desserts", "hanukkah"],
   "author": "Mitch's Treats",
