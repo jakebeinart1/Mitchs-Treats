@@ -16,10 +16,9 @@ const PRODUCTS = [
     name: 'Sofganiyot - Premium Fillings',
     price: 4.50,
     images: [
-      'images/Sofganiyot - Premium Fillings/Biscoff.jpg',
+      'images/Sofganiyot - Premium Fillings/Sofganiya 1.jpg',
       'images/Sofganiyot - Premium Fillings/1.jpg',
-      'images/Sofganiyot - Premium Fillings/3.jpg',
-      'images/Sofganiyot - Premium Fillings/M&M.jpg'
+      'images/Sofganiyot - Premium Fillings/3.jpg'
     ],
     description: 'Donuts with premium fillings',
     hasFlavorOptions: true,
