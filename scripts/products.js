@@ -21,7 +21,7 @@ const PRODUCTS = [
       'images/Sofganiyot - Premium Fillings/3.jpg',
       'images/Sofganiyot - Premium Fillings/M&M.jpg'
     ],
-    description: 'Jelly donuts with premium fillings',
+    description: 'Donuts with premium fillings',
     hasFlavorOptions: true,
     flavors: ['Nutella', 'Dulce de Leche', 'Vanilla Custard', 'Biscoff', 'Marshmallows'],
     minQuantity: 1,

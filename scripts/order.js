@@ -55,17 +55,8 @@ class OrderManager {
                 ${minNote}
             </div>
             <div class="product-controls">
-                <div class="form-group">
-                    <label for="quantity-${product.id}">Quantity</label>
-                    <select id="quantity-${product.id}" class="quantity-select" data-product-id="${product.id}">
-                        <option value="0">Select Quantity</option>
-                        ${product.quantityOptions.map(qty =>
-                            `<option value="${qty}">${qty}</option>`
-                        ).join('')}
-                    </select>
-                </div>
                 ${product.hasFlavorOptions ? `
-                    <div class="form-group flavor-group hidden" id="flavor-group-${product.id}">
+                    <div class="form-group flavor-group" id="flavor-group-${product.id}">
                         <label for="flavor-${product.id}">Flavor</label>
                         <select id="flavor-${product.id}" class="flavor-select" data-product-id="${product.id}">
                             <option value="">Select Flavor</option>
@@ -75,6 +66,15 @@ class OrderManager {
                         </select>
                     </div>
                 ` : ''}
+                <div class="form-group ${product.hasFlavorOptions ? 'hidden' : ''}" id="quantity-group-${product.id}">
+                    <label for="quantity-${product.id}">Quantity</label>
+                    <select id="quantity-${product.id}" class="quantity-select" data-product-id="${product.id}">
+                        <option value="0">Select Quantity</option>
+                        ${product.quantityOptions.map(qty =>
+                            `<option value="${qty}">${qty}</option>`
+                        ).join('')}
+                    </select>
+                </div>
                 <div class="add-to-order-container hidden" id="add-btn-container-${product.id}">
                     <button class="btn btn-add-to-order" data-product-id="${product.id}">Add to Order</button>
                 </div>
@@ -180,6 +180,24 @@ class OrderManager {
         });
     }
 
+    // Handle flavor selection (for products with flavor options)
+    handleFlavorChange(select) {
+        const productId = select.dataset.productId;
+        const flavor = select.value;
+        const quantityGroup = document.getElementById(`quantity-group-${productId}`);
+
+        if (flavor) {
+            // Flavor selected, show quantity dropdown
+            quantityGroup.classList.remove('hidden');
+        } else {
+            // No flavor, hide quantity and add button
+            quantityGroup.classList.add('hidden');
+            const addBtnContainer = document.getElementById(`add-btn-container-${productId}`);
+            addBtnContainer.classList.add('hidden');
+            document.getElementById(`quantity-${productId}`).value = '0';
+        }
+    }
+
     // Handle quantity selection
     handleQuantityChange(select) {
         const productId = select.dataset.productId;
@@ -191,12 +209,6 @@ class OrderManager {
         const addBtnContainer = document.getElementById(`add-btn-container-${productId}`);
 
         if (quantity === 0) {
-            // Hide flavor and add button
-            if (product.hasFlavorOptions) {
-                const flavorGroup = document.getElementById(`flavor-group-${productId}`);
-                flavorGroup.classList.add('hidden');
-                document.getElementById(`flavor-${productId}`).value = '';
-            }
             addBtnContainer.classList.add('hidden');
             return;
         }
@@ -209,30 +221,18 @@ class OrderManager {
             return;
         }
 
-        // Show flavor dropdown if needed
+        // For products with flavors, check if flavor is selected
         if (product.hasFlavorOptions) {
-            const flavorGroup = document.getElementById(`flavor-group-${productId}`);
-            flavorGroup.classList.remove('hidden');
-            // Don't show add button yet - wait for flavor selection
-        } else {
-            // No flavor needed, show add button
-            addBtnContainer.classList.remove('hidden');
+            const flavorSelect = document.getElementById(`flavor-${productId}`);
+            if (!flavorSelect.value) {
+                alert('Please select a flavor first');
+                select.value = '0';
+                return;
+            }
         }
-    }
 
-    // Handle flavor selection
-    handleFlavorChange(select) {
-        const productId = select.dataset.productId;
-        const flavor = select.value;
-        const addBtnContainer = document.getElementById(`add-btn-container-${productId}`);
-
-        if (flavor) {
-            // Flavor selected, show add button
-            addBtnContainer.classList.remove('hidden');
-        } else {
-            // No flavor, hide add button
-            addBtnContainer.classList.add('hidden');
-        }
+        // Show add button
+        addBtnContainer.classList.remove('hidden');
     }
 
     // Handle Add to Order button
@@ -304,14 +304,14 @@ class OrderManager {
 
         // Reset quantity
         const quantitySelect = document.getElementById(`quantity-${productId}`);
+        const quantityGroup = document.getElementById(`quantity-group-${productId}`);
         quantitySelect.value = '0';
 
         // Reset flavor if applicable
         if (product.hasFlavorOptions) {
-            const flavorGroup = document.getElementById(`flavor-group-${productId}`);
             const flavorSelect = document.getElementById(`flavor-${productId}`);
-            flavorGroup.classList.add('hidden');
             flavorSelect.value = '';
+            quantityGroup.classList.add('hidden');
         }
 
         // Hide add button
