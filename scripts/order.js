@@ -494,7 +494,7 @@ class OrderManager {
         const selectedDate = new Date(pickupDate);
         const minDate = new Date('2025-12-06');
         if (selectedDate < minDate) {
-            alert('Pickup dates are only available starting December 6, 2025. Orders for the first night should be placed ASAP!');
+            alert('Pickup dates are only available starting December 6, 2025. Orders for December 6th should be placed ASAP!');
             document.getElementById('pickup-date').focus();
             return false;
         }
