@@ -4,6 +4,7 @@ class OrderManager {
     constructor() {
         this.cart = [];
         this.cartIdCounter = 0; // Unique ID for each cart item
+        this.isDec6Pickup = false; // Track if pickup date is Dec 6, 2025
         this.init();
     }
 
@@ -31,8 +32,16 @@ class OrderManager {
         card.className = 'product-card';
         card.dataset.productId = product.id;
 
-        const minNote = product.minQuantity > 1
-            ? `<div class="min-quantity-note">Minimum order: ${product.minQuantity}</div>`
+        // Determine which quantity options and minimum to use
+        const currentMinQuantity = (this.isDec6Pickup && product.isDec6Special)
+            ? product.dec6MinQuantity
+            : product.minQuantity;
+        const currentQuantityOptions = (this.isDec6Pickup && product.isDec6Special)
+            ? product.dec6QuantityOptions
+            : product.quantityOptions;
+
+        const minNote = currentMinQuantity > 1
+            ? `<div class="min-quantity-note">Minimum order: ${currentMinQuantity}</div>`
             : '';
 
         // Image gallery HTML
@@ -70,7 +79,7 @@ class OrderManager {
                     <label for="quantity-${product.id}">Quantity</label>
                     <select id="quantity-${product.id}" class="quantity-select" data-product-id="${product.id}">
                         <option value="0">Select Quantity</option>
-                        ${product.quantityOptions.map(qty =>
+                        ${currentQuantityOptions.map(qty =>
                             `<option value="${qty}">${qty}</option>`
                         ).join('')}
                     </select>
@@ -145,6 +154,31 @@ class OrderManager {
         if (clearBtn) {
             clearBtn.addEventListener('click', () => this.clearOrder());
         }
+
+        // Pickup date change listener
+        const pickupDateField = document.getElementById('pickup-date');
+        if (pickupDateField) {
+            pickupDateField.addEventListener('change', (e) => this.handlePickupDateChange(e.target.value));
+        }
+    }
+
+    // Handle pickup date change - update quantity options for Dec 6 special
+    handlePickupDateChange(dateValue) {
+        if (!dateValue) {
+            this.isDec6Pickup = false;
+            return;
+        }
+
+        // Check if selected date is December 6, 2025
+        const selectedDate = new Date(dateValue);
+        const dec6_2025 = new Date('2025-12-06');
+
+        this.isDec6Pickup = (selectedDate.getFullYear() === dec6_2025.getFullYear() &&
+                             selectedDate.getMonth() === dec6_2025.getMonth() &&
+                             selectedDate.getDate() === dec6_2025.getDate());
+
+        // Re-render products with updated quantity options
+        this.renderProducts();
     }
 
     // Navigate through product images
@@ -213,9 +247,14 @@ class OrderManager {
             return;
         }
 
+        // Determine which minimum quantity to use
+        const currentMinQuantity = (this.isDec6Pickup && product.isDec6Special)
+            ? product.dec6MinQuantity
+            : product.minQuantity;
+
         // Validate minimum quantity
-        if (quantity < product.minQuantity) {
-            alert(`Minimum order for ${product.name} is ${product.minQuantity}`);
+        if (quantity < currentMinQuantity) {
+            alert(`Minimum order for ${product.name} is ${currentMinQuantity}`);
             select.value = '0';
             addBtnContainer.classList.add('hidden');
             return;
@@ -429,11 +468,11 @@ class OrderManager {
             return false;
         }
 
-        // Validate pickup date is not before December 6, 2024
+        // Validate pickup date is not before December 6, 2025
         const selectedDate = new Date(pickupDate);
-        const minDate = new Date('2024-12-06');
+        const minDate = new Date('2025-12-06');
         if (selectedDate < minDate) {
-            alert('Pickup dates are only available starting December 6, 2024. Orders for the first night should be placed ASAP!');
+            alert('Pickup dates are only available starting December 6, 2025. Orders for the first night should be placed ASAP!');
             document.getElementById('pickup-date').focus();
             return false;
         }
