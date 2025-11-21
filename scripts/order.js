@@ -429,6 +429,15 @@ class OrderManager {
             return false;
         }
 
+        // Validate pickup date is not before December 6, 2024
+        const selectedDate = new Date(pickupDate);
+        const minDate = new Date('2024-12-06');
+        if (selectedDate < minDate) {
+            alert('Pickup dates are only available starting December 6, 2024. Orders for the first night should be placed ASAP!');
+            document.getElementById('pickup-date').focus();
+            return false;
+        }
+
         return true;
     }
 

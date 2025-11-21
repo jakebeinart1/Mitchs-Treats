@@ -8,8 +8,8 @@ const PRODUCTS = [
     description: 'Traditional jelly donuts with strawberry jam filling',
     hasFlavorOptions: false,
     defaultFlavor: 'Strawberry Jam',
-    minQuantity: 1,
-    quantityOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 24, 36, 48]
+    minQuantity: 10,
+    quantityOptions: [10, 12, 18, 24, 36, 48]
   },
   {
     id: 'sofganiyot-4.5',
@@ -23,8 +23,8 @@ const PRODUCTS = [
     description: 'Donuts with premium fillings',
     hasFlavorOptions: true,
     flavors: ['Nutella', 'Dulce de Leche', 'Vanilla Custard', 'Biscoff', 'Marshmallows'],
-    minQuantity: 1,
-    quantityOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 24, 36, 48]
+    minQuantity: 10,
+    quantityOptions: [10, 12, 18, 24, 36, 48]
   },
   {
     id: 'cake-pops',
