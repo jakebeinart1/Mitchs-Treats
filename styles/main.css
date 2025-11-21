@@ -358,18 +358,19 @@ nav {
    =========================== */
 .hanukkah-notice {
     padding: var(--space-2xl) var(--space-lg);
-    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
     margin: var(--space-xl) 0;
+    position: relative;
 }
 
 .notice-box {
     max-width: 900px;
     margin: 0 auto;
-    background: rgba(255, 255, 255, 0.98);
-    border-radius: var(--radius-xl);
-    padding: var(--space-xl);
-    box-shadow: var(--shadow-xl);
-    border: 3px solid var(--gold);
+    background: var(--white);
+    border-radius: 20px;
+    padding: var(--space-2xl);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(255, 215, 0, 0.3);
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -381,31 +382,24 @@ nav {
     top: 0;
     left: 0;
     right: 0;
-    height: 6px;
-    background: var(--gradient-gold);
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
 }
 
 .notice-icon {
-    font-size: 4rem;
+    font-size: 3.5rem;
     margin-bottom: var(--space-md);
-    animation: gentle-bounce 2s ease-in-out infinite;
-}
-
-@keyframes gentle-bounce {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-8px) scale(1.05); }
+    display: inline-block;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .notice-title {
-    font-size: 2rem;
+    font-size: 1.875rem;
     font-weight: 800;
     font-family: 'Inter', sans-serif;
     letter-spacing: -0.02em;
-    margin-bottom: var(--space-lg);
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    margin-bottom: var(--space-xl);
+    color: var(--primary-blue);
 }
 
 .notice-content {
@@ -421,7 +415,7 @@ nav {
     color: var(--gray-dark);
     line-height: 1.8;
     margin-bottom: var(--space-md);
-    padding-left: var(--space-lg);
+    padding-left: var(--space-md);
 }
 
 .notice-content p:last-child {
@@ -429,16 +423,23 @@ nav {
 }
 
 .notice-highlight {
-    background: linear-gradient(135deg, var(--cream) 0%, var(--gold-light) 50%, var(--cream) 100%);
-    border-left: 4px solid var(--gold);
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 2px solid var(--gold);
     padding: var(--space-md) var(--space-lg);
-    border-radius: var(--radius-md);
+    border-radius: 12px;
     font-weight: 700 !important;
     font-size: 1.125rem !important;
     text-align: center !important;
     margin-top: var(--space-lg) !important;
-    color: var(--primary-blue-dark) !important;
-    box-shadow: var(--shadow-sm);
+    color: #92400e !important;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.25);
+    padding-left: var(--space-md) !important;
+    transition: all var(--transition-normal);
+}
+
+.notice-highlight:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.35);
 }
 
 /* ===========================
@@ -1615,18 +1616,26 @@ nav {
     }
 
     /* Hanukkah Notice Responsive */
+    .notice-box {
+        padding: var(--space-lg);
+    }
+
+    .notice-icon {
+        font-size: 3rem;
+    }
+
     .notice-title {
         font-size: 1.5rem;
     }
 
     .notice-content p {
         font-size: 0.9375rem;
-        padding-left: var(--space-sm);
+        padding-left: var(--space-xs);
     }
 
     .notice-highlight {
         font-size: 1rem !important;
-        padding: var(--space-sm) var(--space-md);
+        padding: var(--space-sm) var(--space-md) !important;
     }
 }
 
