@@ -4,7 +4,7 @@ class OrderManager {
     constructor() {
         this.cart = [];
         this.cartIdCounter = 0; // Unique ID for each cart item
-        this.isDec6Pickup = false; // Track if pickup date is Dec 6, 2025
+        this.isBeforeFirstNight = false; // Track if pickup date is before first night (Dec 6-14, 2025)
         this.init();
     }
 
@@ -33,10 +33,10 @@ class OrderManager {
         card.dataset.productId = product.id;
 
         // Determine which quantity options and minimum to use
-        const currentMinQuantity = (this.isDec6Pickup && product.isDec6Special)
+        const currentMinQuantity = (this.isBeforeFirstNight && product.isDec6Special)
             ? product.dec6MinQuantity
             : product.minQuantity;
-        const currentQuantityOptions = (this.isDec6Pickup && product.isDec6Special)
+        const currentQuantityOptions = (this.isBeforeFirstNight && product.isDec6Special)
             ? product.dec6QuantityOptions
             : product.quantityOptions;
 
@@ -162,24 +162,23 @@ class OrderManager {
         }
     }
 
-    // Handle pickup date change - update quantity options for Dec 6 special
+    // Handle pickup date change - update quantity options for before first night
     handlePickupDateChange(dateValue) {
         if (!dateValue) {
-            this.isDec6Pickup = false;
+            this.isBeforeFirstNight = false;
             return;
         }
 
-        // Check if selected date is December 6, 2025
+        // Check if selected date is between December 6-14, 2025 (before/on first night)
         const selectedDate = new Date(dateValue);
-        const dec6_2025 = new Date('2025-12-06');
+        const startDate = new Date('2025-12-06');
+        const firstNight = new Date('2025-12-14');
 
-        const wasNotDec6 = !this.isDec6Pickup;
-        this.isDec6Pickup = (selectedDate.getFullYear() === dec6_2025.getFullYear() &&
-                             selectedDate.getMonth() === dec6_2025.getMonth() &&
-                             selectedDate.getDate() === dec6_2025.getDate());
+        const wasNotBeforeFirstNight = !this.isBeforeFirstNight;
+        this.isBeforeFirstNight = (selectedDate >= startDate && selectedDate <= firstNight);
 
-        // If changing TO Dec 6, validate existing cart items
-        if (this.isDec6Pickup && wasNotDec6) {
+        // If changing TO before first night period, validate existing cart items
+        if (this.isBeforeFirstNight && wasNotBeforeFirstNight) {
             const invalidItems = this.cart.filter(item => {
                 const product = PRODUCTS.find(p => p.id === item.productId);
                 return product && product.isDec6Special && item.quantity < 10;
@@ -192,7 +191,7 @@ class OrderManager {
                 });
 
                 // Alert user
-                alert(`December 6th pickup requires a minimum of 10 sufganiyot per order. Items with less than 10 have been removed from your cart. Please re-add them with the correct quantity.`);
+                alert(`Orders before the first night (Dec 6-14) require a minimum of 10 sufganiyot per order. Items with less than 10 have been removed from your cart. Please re-add them with the correct quantity.`);
 
                 // Update the summary to reflect removed items
                 this.updateOrderSummary();
@@ -270,7 +269,7 @@ class OrderManager {
         }
 
         // Determine which minimum quantity to use
-        const currentMinQuantity = (this.isDec6Pickup && product.isDec6Special)
+        const currentMinQuantity = (this.isBeforeFirstNight && product.isDec6Special)
             ? product.dec6MinQuantity
             : product.minQuantity;
 
@@ -494,25 +493,24 @@ class OrderManager {
         const selectedDate = new Date(pickupDate);
         const minDate = new Date('2025-12-06');
         if (selectedDate < minDate) {
-            alert('Pickup dates are only available starting December 6, 2025. Orders for December 6th should be placed ASAP!');
+            alert('Pickup dates are only available starting December 6, 2025. Orders for the first night (Dec 14th) should be placed ASAP!');
             document.getElementById('pickup-date').focus();
             return false;
         }
 
-        // If pickup date is December 6, 2025, validate sufganiyot minimum quantity
-        const dec6_2025 = new Date('2025-12-06');
-        const isDec6 = (selectedDate.getFullYear() === dec6_2025.getFullYear() &&
-                        selectedDate.getMonth() === dec6_2025.getMonth() &&
-                        selectedDate.getDate() === dec6_2025.getDate());
+        // If pickup date is before first night (Dec 6-14, 2025), validate sufganiyot minimum quantity
+        const startDate = new Date('2025-12-06');
+        const firstNight = new Date('2025-12-14');
+        const isBeforeFirstNight = (selectedDate >= startDate && selectedDate <= firstNight);
 
-        if (isDec6) {
+        if (isBeforeFirstNight) {
             const invalidItems = this.cart.filter(item => {
                 const product = PRODUCTS.find(p => p.id === item.productId);
                 return product && product.isDec6Special && item.quantity < 10;
             });
 
             if (invalidItems.length > 0) {
-                alert('December 6th pickup requires a minimum of 10 sufganiyot per order. Please update your cart or choose a different pickup date.');
+                alert('Orders before the first night (Dec 6-14) require a minimum of 10 sufganiyot per order. Please update your cart or choose a different pickup date.');
                 return false;
             }
         }
