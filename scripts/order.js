@@ -173,9 +173,31 @@ class OrderManager {
         const selectedDate = new Date(dateValue);
         const dec6_2025 = new Date('2025-12-06');
 
+        const wasNotDec6 = !this.isDec6Pickup;
         this.isDec6Pickup = (selectedDate.getFullYear() === dec6_2025.getFullYear() &&
                              selectedDate.getMonth() === dec6_2025.getMonth() &&
                              selectedDate.getDate() === dec6_2025.getDate());
+
+        // If changing TO Dec 6, validate existing cart items
+        if (this.isDec6Pickup && wasNotDec6) {
+            const invalidItems = this.cart.filter(item => {
+                const product = PRODUCTS.find(p => p.id === item.productId);
+                return product && product.isDec6Special && item.quantity < 10;
+            });
+
+            if (invalidItems.length > 0) {
+                // Remove invalid items from cart
+                invalidItems.forEach(item => {
+                    this.cart = this.cart.filter(cartItem => cartItem.cartItemId !== item.cartItemId);
+                });
+
+                // Alert user
+                alert(`December 6th pickup requires a minimum of 10 sufganiyot per order. Items with less than 10 have been removed from your cart. Please re-add them with the correct quantity.`);
+
+                // Update the summary to reflect removed items
+                this.updateOrderSummary();
+            }
+        }
 
         // Re-render products with updated quantity options
         this.renderProducts();
@@ -475,6 +497,24 @@ class OrderManager {
             alert('Pickup dates are only available starting December 6, 2025. Orders for the first night should be placed ASAP!');
             document.getElementById('pickup-date').focus();
             return false;
+        }
+
+        // If pickup date is December 6, 2025, validate sufganiyot minimum quantity
+        const dec6_2025 = new Date('2025-12-06');
+        const isDec6 = (selectedDate.getFullYear() === dec6_2025.getFullYear() &&
+                        selectedDate.getMonth() === dec6_2025.getMonth() &&
+                        selectedDate.getDate() === dec6_2025.getDate());
+
+        if (isDec6) {
+            const invalidItems = this.cart.filter(item => {
+                const product = PRODUCTS.find(p => p.id === item.productId);
+                return product && product.isDec6Special && item.quantity < 10;
+            });
+
+            if (invalidItems.length > 0) {
+                alert('December 6th pickup requires a minimum of 10 sufganiyot per order. Please update your cart or choose a different pickup date.');
+                return false;
+            }
         }
 
         return true;
