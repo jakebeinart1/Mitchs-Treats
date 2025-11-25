@@ -1,33 +1,27 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 require('dotenv').config();
 
 class EmailService {
   constructor() {
-    this.transporter = null;
+    this.resend = null;
     this.enabled = false;
+    this.fromEmail = process.env.RESEND_FROM_EMAIL || 'orders@mitchstreats.com';
+    this.toEmail = process.env.RESEND_TO_EMAIL || 'mitchs.treats@gmail.com';
   }
 
   async initialize() {
-    // Check if email credentials are provided
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.log('ℹ️  Email notifications disabled (no credentials provided)');
+    // Check if Resend API key is provided
+    if (!process.env.RESEND_API_KEY) {
+      console.log('ℹ️  Email notifications disabled (no Resend API key provided)');
       this.enabled = false;
       return false;
     }
 
     try {
-      // Create transporter using Gmail SMTP
-      this.transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
-
-      // Verify connection
-      await this.transporter.verify();
-      console.log('✅ Email service initialized successfully');
+      // Initialize Resend
+      this.resend = new Resend(process.env.RESEND_API_KEY);
+      console.log('✅ Email service initialized successfully (Resend)');
+      console.log(`   📧 Sending to: ${this.toEmail}`);
       this.enabled = true;
       return true;
     } catch (error) {
@@ -83,16 +77,20 @@ ${orderData.specialInstructions ? `Special Instructions:\n${orderData.specialIns
 Total Items: ${orderData.totalItems}
       `.trim();
 
-      // Send email
-      const info = await this.transporter.sendMail({
-        from: `"Mitch's Treats Orders" <${process.env.EMAIL_USER}>`,
-        to: process.env.EMAIL_USER,
-        subject: `New Order from ${customerName}`,
+      // Send email using Resend
+      const { data, error } = await this.resend.emails.send({
+        from: `Mitch's Treats Orders <${this.fromEmail}>`,
+        to: [this.toEmail],
+        subject: `🍩 New Order from ${customerName}`,
         text: emailContent,
       });
 
-      console.log('✅ Order notification email sent:', info.messageId);
-      return { success: true, messageId: info.messageId };
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      console.log('✅ Order notification email sent:', data.id);
+      return { success: true, messageId: data.id };
     } catch (error) {
       console.error('⚠️  Error sending email:', error.message);
       console.log('ℹ️  Order was still recorded in Google Sheets');
