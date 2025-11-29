@@ -4,7 +4,6 @@ class OrderManager {
     constructor() {
         this.cart = [];
         this.cartIdCounter = 0; // Unique ID for each cart item
-        this.isBeforeFirstNight = false; // Track if pickup date is before first night (Dec 6-14, 2025)
         this.init();
     }
 
@@ -32,16 +31,8 @@ class OrderManager {
         card.className = 'product-card';
         card.dataset.productId = product.id;
 
-        // Determine which quantity options and minimum to use
-        const currentMinQuantity = (this.isBeforeFirstNight && product.isDec6Special)
-            ? product.dec6MinQuantity
-            : product.minQuantity;
-        const currentQuantityOptions = (this.isBeforeFirstNight && product.isDec6Special)
-            ? product.dec6QuantityOptions
-            : product.quantityOptions;
-
-        const minNote = currentMinQuantity > 1
-            ? `<div class="min-quantity-note">Minimum order: ${currentMinQuantity}</div>`
+        const minNote = product.minQuantity > 1
+            ? `<div class="min-quantity-note">Minimum order: ${product.minQuantity}</div>`
             : '';
 
         // Image gallery HTML
@@ -79,7 +70,7 @@ class OrderManager {
                     <label for="quantity-${product.id}">Quantity</label>
                     <select id="quantity-${product.id}" class="quantity-select" data-product-id="${product.id}">
                         <option value="0">Select Quantity</option>
-                        ${currentQuantityOptions.map(qty =>
+                        ${product.quantityOptions.map(qty =>
                             `<option value="${qty}">${qty}</option>`
                         ).join('')}
                     </select>
@@ -154,52 +145,6 @@ class OrderManager {
         if (clearBtn) {
             clearBtn.addEventListener('click', () => this.clearOrder());
         }
-
-        // Pickup date change listener
-        const pickupDateField = document.getElementById('pickup-date');
-        if (pickupDateField) {
-            pickupDateField.addEventListener('change', (e) => this.handlePickupDateChange(e.target.value));
-        }
-    }
-
-    // Handle pickup date change - update quantity options for before first night
-    handlePickupDateChange(dateValue) {
-        if (!dateValue) {
-            this.isBeforeFirstNight = false;
-            return;
-        }
-
-        // Check if selected date is between December 6-14, 2025 (before/on first night)
-        const selectedDate = new Date(dateValue);
-        const startDate = new Date('2025-12-06');
-        const firstNight = new Date('2025-12-14');
-
-        const wasNotBeforeFirstNight = !this.isBeforeFirstNight;
-        this.isBeforeFirstNight = (selectedDate >= startDate && selectedDate <= firstNight);
-
-        // If changing TO before first night period, validate existing cart items
-        if (this.isBeforeFirstNight && wasNotBeforeFirstNight) {
-            const invalidItems = this.cart.filter(item => {
-                const product = PRODUCTS.find(p => p.id === item.productId);
-                return product && product.isDec6Special && item.quantity < 10;
-            });
-
-            if (invalidItems.length > 0) {
-                // Remove invalid items from cart
-                invalidItems.forEach(item => {
-                    this.cart = this.cart.filter(cartItem => cartItem.cartItemId !== item.cartItemId);
-                });
-
-                // Alert user
-                alert(`Orders before the first night (Dec 6-14) require a minimum of 10 sufganiyot per order. Items with less than 10 have been removed from your cart. Please re-add them with the correct quantity.`);
-
-                // Update the summary to reflect removed items
-                this.updateOrderSummary();
-            }
-        }
-
-        // Re-render products with updated quantity options
-        this.renderProducts();
     }
 
     // Navigate through product images
@@ -268,14 +213,9 @@ class OrderManager {
             return;
         }
 
-        // Determine which minimum quantity to use
-        const currentMinQuantity = (this.isBeforeFirstNight && product.isDec6Special)
-            ? product.dec6MinQuantity
-            : product.minQuantity;
-
         // Validate minimum quantity
-        if (quantity < currentMinQuantity) {
-            alert(`Minimum order for ${product.name} is ${currentMinQuantity}`);
+        if (quantity < product.minQuantity) {
+            alert(`Minimum order for ${product.name} is ${product.minQuantity}`);
             select.value = '0';
             addBtnContainer.classList.add('hidden');
             return;
@@ -498,19 +438,24 @@ class OrderManager {
             return false;
         }
 
-        // If pickup date is before first night (Dec 6-14, 2025), validate sufganiyot minimum quantity
+        // If pickup date is before first night (Dec 6-14, 2025), validate sufganiyot TOTAL minimum
         const startDate = new Date('2025-12-06');
         const firstNight = new Date('2025-12-14');
         const isBeforeFirstNight = (selectedDate >= startDate && selectedDate <= firstNight);
 
         if (isBeforeFirstNight) {
-            const invalidItems = this.cart.filter(item => {
+            // Calculate TOTAL sufganiyot across all cart items
+            let totalSufganiyot = 0;
+            this.cart.forEach(item => {
                 const product = PRODUCTS.find(p => p.id === item.productId);
-                return product && product.isDec6Special && item.quantity < 10;
+                if (product && product.isDec6Special) {
+                    totalSufganiyot += item.quantity;
+                }
             });
 
-            if (invalidItems.length > 0) {
-                alert('Orders before the first night (Dec 6-14) require a minimum of 10 sufganiyot per order. Please update your cart or choose a different pickup date.');
+            // Check if there are any sufganiyot and if the total is less than 10
+            if (totalSufganiyot > 0 && totalSufganiyot < 10) {
+                alert(`Orders before the first night (Dec 6-14) require a minimum of 10 sufganiyot TOTAL. You currently have ${totalSufganiyot} sufganiyot in your cart. Please add more sufganiyot or choose a different pickup date.`);
                 return false;
             }
         }

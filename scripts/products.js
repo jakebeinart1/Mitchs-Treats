@@ -1,3 +1,12 @@
+// Helper to generate quantity options from 1 to max
+function generateQuantityOptions(min, max) {
+  const options = [];
+  for (let i = min; i <= max; i++) {
+    options.push(i);
+  }
+  return options;
+}
+
 // Product catalog for Mitch's Treats
 const PRODUCTS = [
   {
@@ -9,9 +18,7 @@ const PRODUCTS = [
     hasFlavorOptions: false,
     defaultFlavor: 'Strawberry Jam',
     minQuantity: 1,
-    quantityOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 24, 36, 48],
-    dec6MinQuantity: 10,
-    dec6QuantityOptions: [10, 12, 18, 24, 36, 48],
+    quantityOptions: generateQuantityOptions(1, 36),
     isDec6Special: true
   },
   {
@@ -27,9 +34,7 @@ const PRODUCTS = [
     hasFlavorOptions: true,
     flavors: ['Nutella', 'Dulce de Leche', 'Vanilla Custard', 'Biscoff', 'Marshmallows'],
     minQuantity: 1,
-    quantityOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 24, 36, 48],
-    dec6MinQuantity: 10,
-    dec6QuantityOptions: [10, 12, 18, 24, 36, 48],
+    quantityOptions: generateQuantityOptions(1, 36),
     isDec6Special: true
   },
   {
@@ -41,7 +46,7 @@ const PRODUCTS = [
     hasFlavorOptions: false,
     defaultFlavor: 'Vanilla',
     minQuantity: 6,
-    quantityOptions: [6, 12, 18, 24, 36, 48]
+    quantityOptions: generateQuantityOptions(6, 36)
   },
   {
     id: 'pretzels',
@@ -52,7 +57,7 @@ const PRODUCTS = [
     hasFlavorOptions: false,
     defaultFlavor: 'Chocolate',
     minQuantity: 6,
-    quantityOptions: [6, 12, 18, 24, 36, 48, 60]
+    quantityOptions: generateQuantityOptions(6, 36)
   },
   {
     id: 'decorated-cookies',
@@ -63,7 +68,7 @@ const PRODUCTS = [
     hasFlavorOptions: false,
     defaultFlavor: 'Sugar Cookie',
     minQuantity: 6,
-    quantityOptions: [6, 12, 18, 24, 36, 48]
+    quantityOptions: generateQuantityOptions(6, 36)
   },
   {
     id: 'plain-cookies',
@@ -74,7 +79,7 @@ const PRODUCTS = [
     hasFlavorOptions: false,
     defaultFlavor: 'Plain',
     minQuantity: 6,
-    quantityOptions: [6, 12, 18, 24, 36, 48]
+    quantityOptions: generateQuantityOptions(6, 36)
   },
   {
     id: 'cookie-kit',
@@ -85,7 +90,7 @@ const PRODUCTS = [
     hasFlavorOptions: false,
     defaultFlavor: 'Complete Kit',
     minQuantity: 1,
-    quantityOptions: [1, 2, 3, 4, 5],
+    quantityOptions: generateQuantityOptions(1, 5),
     isKit: true
   }
 ];
