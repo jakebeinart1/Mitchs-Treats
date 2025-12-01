@@ -47,6 +47,7 @@ class SheetsService {
         'Sofganiyot - Vanilla Custard',
         'Sofganiyot - Biscoff',
         'Sofganiyot - Marshmallows',
+        'Sofganiyot - Pistachio Cream',
         'Cake Pops',
         'Chocolate Covered Pretzels',
         'Decorated Cookies',
@@ -60,7 +61,7 @@ class SheetsService {
       // Always update headers to ensure they match current structure
       await this.sheets.spreadsheets.values.update({
         spreadsheetId: this.sheetId,
-        range: 'Sheet1!A1:T1',
+        range: 'Sheet1!A1:U1',
         valueInputOption: 'RAW',
         resource: {
           values: [headers],
@@ -68,7 +69,7 @@ class SheetsService {
       });
 
       // Apply formatting
-      await this.formatSheet(20); // 20 columns total
+      await this.formatSheet(21); // 21 columns total
 
       console.log('✅ Sheet headers updated and formatted');
     } catch (error) {
@@ -285,7 +286,7 @@ class SheetsService {
       });
 
       // Auto-resize columns after adding data
-      await this.autoResizeColumns(20); // 20 columns total
+      await this.autoResizeColumns(21); // 21 columns total
 
       console.log(`✅ Order ${orderId} added to Google Sheets`);
       return { success: true, orderId };
@@ -302,6 +303,7 @@ class SheetsService {
       'Vanilla Custard': 'sofganiyot-vanilla',
       'Biscoff': 'sofganiyot-biscoff',
       'Marshmallows': 'sofganiyot-marshmallows',
+      'Pistachio Cream': 'sofganiyot-pistachio',
     };
     return flavorMap[flavor] || null;
   }

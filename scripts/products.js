@@ -32,7 +32,7 @@ const PRODUCTS = [
     ],
     description: 'Donuts with premium fillings',
     hasFlavorOptions: true,
-    flavors: ['Nutella', 'Dulce de Leche', 'Vanilla Custard', 'Biscoff', 'Marshmallows'],
+    flavors: ['Nutella', 'Dulce de Leche', 'Vanilla Custard', 'Biscoff', 'Marshmallows', 'Pistachio Cream'],
     minQuantity: 1,
     quantityOptions: generateQuantityOptions(1, 36),
     isDec6Special: true
