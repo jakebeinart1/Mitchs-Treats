@@ -438,10 +438,10 @@ class OrderManager {
             return false;
         }
 
-        // If pickup date is before first night (Dec 6-14, 2025), validate sufganiyot TOTAL minimum
+        // If pickup date is before first night (Dec 6-13, 2025), validate sufganiyot TOTAL minimum
         const startDate = new Date('2025-12-06');
         const firstNight = new Date('2025-12-14');
-        const isBeforeFirstNight = (selectedDate >= startDate && selectedDate <= firstNight);
+        const isBeforeFirstNight = (selectedDate >= startDate && selectedDate < firstNight);
 
         if (isBeforeFirstNight) {
             // Calculate TOTAL sufganiyot across all cart items
@@ -455,7 +455,7 @@ class OrderManager {
 
             // Check if there are any sufganiyot and if the total is less than 10
             if (totalSufganiyot > 0 && totalSufganiyot < 10) {
-                alert(`Orders before the first night (Dec 6-14) require a minimum of 10 sufganiyot TOTAL. You currently have ${totalSufganiyot} sufganiyot in your cart. Please add more sufganiyot or choose a different pickup date.`);
+                alert(`Orders before the first night (Dec 6-13) require a minimum of 10 sufganiyot TOTAL. You currently have ${totalSufganiyot} sufganiyot in your cart. Please add more sufganiyot or choose a different pickup date.`);
                 return false;
             }
         }
