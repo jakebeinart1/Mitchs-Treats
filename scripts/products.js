@@ -28,7 +28,9 @@ const PRODUCTS = [
     images: [
       'images/Sofganiyot - Premium Fillings/Sofganiya 1.jpg',
       'images/Sofganiyot - Premium Fillings/1.jpg',
-      'images/Sofganiyot - Premium Fillings/3.jpg'
+      'images/Sofganiyot - Premium Fillings/3.jpg',
+      'images/Sofganiyot - Premium Fillings/FullSizeRender.jpg',
+      'images/Sofganiyot - Premium Fillings/FullSizeRender-2.jpg'
     ],
     description: 'Donuts with premium fillings',
     hasFlavorOptions: true,
