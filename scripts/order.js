@@ -4,12 +4,19 @@ class OrderManager {
     constructor() {
         this.cart = [];
         this.cartIdCounter = 0; // Unique ID for each cart item
+        this.cookieSelections = {}; // Track cookie selections for Cookie Gift Box
+        this.designDescriptions = {}; // Track design descriptions for cakes
         this.init();
     }
 
     init() {
         this.renderProducts();
         this.setupEventListeners();
+    }
+
+    // Get current holiday context
+    getHoliday() {
+        return typeof HOLIDAY !== 'undefined' ? HOLIDAY : 'General';
     }
 
     // Render all products on the page
@@ -46,6 +53,37 @@ class OrderManager {
             </div>
         `;
 
+        // Cookie selection HTML for Cookie Gift Box
+        let cookieSelectionHTML = '';
+        if (product.hasCookieSelection && product.cookieOptions) {
+            this.cookieSelections[product.id] = [];
+            cookieSelectionHTML = `
+                <div class="cookie-selection hidden" id="cookie-selection-${product.id}">
+                    <div class="cookie-selection-title">Select 4 Cookie Types</div>
+                    <div class="cookie-selection-count" id="cookie-count-${product.id}">0 of 4 selected</div>
+                    <div class="cookie-options">
+                        ${product.cookieOptions.map((option, index) => `
+                            <div class="cookie-option" data-product-id="${product.id}" data-cookie="${option}">
+                                <input type="checkbox" id="cookie-${product.id}-${index}" data-product-id="${product.id}" data-cookie="${option}">
+                                <label for="cookie-${product.id}-${index}">${option}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Design description HTML for cakes
+        let designDescriptionHTML = '';
+        if (product.hasDesignDescription) {
+            designDescriptionHTML = `
+                <div class="design-description-group hidden" id="design-group-${product.id}">
+                    <label for="design-${product.id}">Describe Your Design</label>
+                    <textarea id="design-${product.id}" placeholder="Describe the design you'd like for your cake..." rows="3"></textarea>
+                </div>
+            `;
+        }
+
         card.innerHTML = `
             ${imageGalleryHTML}
             <div class="product-header">
@@ -75,6 +113,8 @@ class OrderManager {
                         ).join('')}
                     </select>
                 </div>
+                ${cookieSelectionHTML}
+                ${designDescriptionHTML}
                 <div class="add-to-order-container hidden" id="add-btn-container-${product.id}">
                     <button class="btn btn-add-to-order" data-product-id="${product.id}">Add to Order</button>
                 </div>
@@ -121,6 +161,13 @@ class OrderManager {
         document.addEventListener('change', (e) => {
             if (e.target.classList.contains('flavor-select')) {
                 this.handleFlavorChange(e.target);
+            }
+        });
+
+        // Cookie selection checkboxes
+        document.addEventListener('change', (e) => {
+            if (e.target.type === 'checkbox' && e.target.dataset.cookie) {
+                this.handleCookieSelectionChange(e.target);
             }
         });
 
@@ -198,6 +245,52 @@ class OrderManager {
         }
     }
 
+    // Handle cookie selection for Cookie Gift Box
+    handleCookieSelectionChange(checkbox) {
+        const productId = checkbox.dataset.productId;
+        const cookieName = checkbox.dataset.cookie;
+        const product = PRODUCTS.find(p => p.id === productId);
+
+        if (!product || !product.hasCookieSelection) return;
+
+        if (!this.cookieSelections[productId]) {
+            this.cookieSelections[productId] = [];
+        }
+
+        if (checkbox.checked) {
+            if (this.cookieSelections[productId].length < 4) {
+                this.cookieSelections[productId].push(cookieName);
+            } else {
+                checkbox.checked = false;
+                return;
+            }
+        } else {
+            this.cookieSelections[productId] = this.cookieSelections[productId].filter(c => c !== cookieName);
+        }
+
+        // Update count display
+        const countEl = document.getElementById(`cookie-count-${productId}`);
+        const count = this.cookieSelections[productId].length;
+        countEl.textContent = `${count} of 4 selected`;
+        countEl.classList.remove('valid', 'invalid');
+        if (count === 4) {
+            countEl.classList.add('valid');
+        } else if (count > 0) {
+            countEl.classList.add('invalid');
+        }
+
+        // Update checkbox visual states
+        const cookieOptions = document.querySelectorAll(`.cookie-option[data-product-id="${productId}"]`);
+        cookieOptions.forEach(option => {
+            const cb = option.querySelector('input[type="checkbox"]');
+            option.classList.toggle('selected', cb.checked);
+            option.classList.toggle('disabled', !cb.checked && count >= 4);
+        });
+
+        // Update add button visibility
+        this.updateAddButtonVisibility(productId);
+    }
+
     // Handle quantity selection
     handleQuantityChange(select) {
         const productId = select.dataset.productId;
@@ -210,6 +303,11 @@ class OrderManager {
 
         if (quantity === 0) {
             addBtnContainer.classList.add('hidden');
+            // Hide cookie selection and design description
+            const cookieSelection = document.getElementById(`cookie-selection-${productId}`);
+            const designGroup = document.getElementById(`design-group-${productId}`);
+            if (cookieSelection) cookieSelection.classList.add('hidden');
+            if (designGroup) designGroup.classList.add('hidden');
             return;
         }
 
@@ -231,7 +329,50 @@ class OrderManager {
             }
         }
 
-        // Show add button
+        // Show cookie selection for Cookie Gift Box
+        if (product.hasCookieSelection) {
+            const cookieSelection = document.getElementById(`cookie-selection-${productId}`);
+            if (cookieSelection) {
+                cookieSelection.classList.remove('hidden');
+            }
+        }
+
+        // Show design description for cakes
+        if (product.hasDesignDescription) {
+            const designGroup = document.getElementById(`design-group-${productId}`);
+            if (designGroup) {
+                designGroup.classList.remove('hidden');
+            }
+        }
+
+        // Update add button visibility
+        this.updateAddButtonVisibility(productId);
+    }
+
+    // Update add button visibility based on all requirements
+    updateAddButtonVisibility(productId) {
+        const product = PRODUCTS.find(p => p.id === productId);
+        if (!product) return;
+
+        const addBtnContainer = document.getElementById(`add-btn-container-${productId}`);
+        const quantitySelect = document.getElementById(`quantity-${productId}`);
+        const quantity = parseInt(quantitySelect.value);
+
+        if (quantity === 0) {
+            addBtnContainer.classList.add('hidden');
+            return;
+        }
+
+        // Check cookie selection requirement
+        if (product.hasCookieSelection) {
+            const count = this.cookieSelections[productId]?.length || 0;
+            if (count !== 4) {
+                addBtnContainer.classList.add('hidden');
+                return;
+            }
+        }
+
+        // All requirements met
         addBtnContainer.classList.remove('hidden');
     }
 
@@ -255,16 +396,43 @@ class OrderManager {
             }
         }
 
+        // Get cookie selections for Cookie Gift Box
+        let cookieSelection = null;
+        if (product.hasCookieSelection) {
+            cookieSelection = this.cookieSelections[productId] || [];
+            if (cookieSelection.length !== 4) {
+                alert('Please select exactly 4 cookie types');
+                return;
+            }
+        }
+
+        // Get design description for cakes
+        let designDescription = null;
+        if (product.hasDesignDescription) {
+            const designTextarea = document.getElementById(`design-${productId}`);
+            designDescription = designTextarea?.value.trim() || '';
+        }
+
         // Add to cart with unique ID
         this.cartIdCounter++;
-        this.cart.push({
+        const cartItem = {
             cartItemId: this.cartIdCounter,
             productId: product.id,
             productName: product.name,
             quantity: quantity,
             flavor: flavor,
             price: product.price
-        });
+        };
+
+        if (cookieSelection) {
+            cartItem.cookieSelection = cookieSelection;
+        }
+
+        if (designDescription) {
+            cartItem.designDescription = designDescription;
+        }
+
+        this.cart.push(cartItem);
 
         // Reset the product card
         this.resetProductCard(productId);
@@ -277,7 +445,7 @@ class OrderManager {
         const originalText = addBtn.textContent;
 
         // Create success animation
-        addBtn.textContent = '✓ Added to Order!';
+        addBtn.textContent = 'Added!';
         addBtn.style.background = 'linear-gradient(135deg, #34C759 0%, #28A745 100%)';
         addBtn.style.transform = 'scale(1.05)';
 
@@ -314,6 +482,32 @@ class OrderManager {
             quantityGroup.classList.add('hidden');
         }
 
+        // Reset cookie selection
+        if (product.hasCookieSelection) {
+            this.cookieSelections[productId] = [];
+            const cookieSelection = document.getElementById(`cookie-selection-${productId}`);
+            if (cookieSelection) {
+                cookieSelection.classList.add('hidden');
+                const checkboxes = cookieSelection.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(cb => cb.checked = false);
+                const options = cookieSelection.querySelectorAll('.cookie-option');
+                options.forEach(opt => opt.classList.remove('selected', 'disabled'));
+                const countEl = document.getElementById(`cookie-count-${productId}`);
+                if (countEl) {
+                    countEl.textContent = '0 of 4 selected';
+                    countEl.classList.remove('valid', 'invalid');
+                }
+            }
+        }
+
+        // Reset design description
+        if (product.hasDesignDescription) {
+            const designGroup = document.getElementById(`design-group-${productId}`);
+            const designTextarea = document.getElementById(`design-${productId}`);
+            if (designGroup) designGroup.classList.add('hidden');
+            if (designTextarea) designTextarea.value = '';
+        }
+
         // Hide add button
         const addBtnContainer = document.getElementById(`add-btn-container-${productId}`);
         addBtnContainer.classList.add('hidden');
@@ -342,14 +536,22 @@ class OrderManager {
             totalItems += item.quantity;
             totalPrice += itemTotal;
 
+            let specsHTML = `Quantity: ${item.quantity}`;
+            if (item.flavor) {
+                specsHTML += ` • ${item.flavor}`;
+            }
+            if (item.cookieSelection && item.cookieSelection.length > 0) {
+                specsHTML += `<br>Cookies: ${item.cookieSelection.join(', ')}`;
+            }
+            if (item.designDescription) {
+                specsHTML += `<br>Design: ${item.designDescription}`;
+            }
+
             summaryHTML += `
                 <div class="summary-item">
                     <div class="item-details">
                         <div class="item-name">${item.productName}</div>
-                        <div class="item-specs">
-                            Quantity: ${item.quantity}
-                            ${item.flavor ? ` • Flavor: ${item.flavor}` : ''}
-                        </div>
+                        <div class="item-specs">${specsHTML}</div>
                     </div>
                     <div class="item-actions">
                         <div class="item-price">$${itemTotal.toFixed(2)}</div>
@@ -429,35 +631,12 @@ class OrderManager {
             return false;
         }
 
-        // Validate pickup date is not before December 6, 2025
-        const selectedDate = new Date(pickupDate);
-        const minDate = new Date('2025-12-06');
-        if (selectedDate < minDate) {
-            alert('Pickup dates are only available starting December 6, 2025. Orders for the first night (Dec 14th) should be placed ASAP!');
-            document.getElementById('pickup-date').focus();
+        // Validate pickup time for Valentines
+        const pickupTimeEl = document.getElementById('pickup-time');
+        if (pickupTimeEl && !pickupTimeEl.value) {
+            alert('Please select a pickup time');
+            pickupTimeEl.focus();
             return false;
-        }
-
-        // If pickup date is before first night (Dec 6-13, 2025), validate sufganiyot TOTAL minimum
-        const startDate = new Date('2025-12-06');
-        const firstNight = new Date('2025-12-14');
-        const isBeforeFirstNight = (selectedDate >= startDate && selectedDate < firstNight);
-
-        if (isBeforeFirstNight) {
-            // Calculate TOTAL sufganiyot across all cart items
-            let totalSufganiyot = 0;
-            this.cart.forEach(item => {
-                const product = PRODUCTS.find(p => p.id === item.productId);
-                if (product && product.isDec6Special) {
-                    totalSufganiyot += item.quantity;
-                }
-            });
-
-            // Check if there are any sufganiyot and if the total is less than 10
-            if (totalSufganiyot > 0 && totalSufganiyot < 10) {
-                alert(`Orders before the first night (Dec 6-13) require a minimum of 10 sufganiyot TOTAL. You currently have ${totalSufganiyot} sufganiyot in your cart. Please add more sufganiyot or choose a different pickup date.`);
-                return false;
-            }
         }
 
         return true;
@@ -476,17 +655,23 @@ class OrderManager {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting...';
 
+        // Get pickup time if available
+        const pickupTimeEl = document.getElementById('pickup-time');
+        const pickupTime = pickupTimeEl ? pickupTimeEl.value : null;
+
         // Gather form data
         const orderData = {
             customer: {
                 name: document.getElementById('customer-name').value.trim(),
                 email: document.getElementById('customer-email').value.trim(),
                 phone: document.getElementById('customer-phone').value.trim(),
-                pickupDate: document.getElementById('pickup-date').value
+                pickupDate: document.getElementById('pickup-date').value,
+                pickupTime: pickupTime
             },
             items: this.cart,
             specialInstructions: document.getElementById('special-instructions').value.trim(),
-            totalItems: this.cart.reduce((sum, item) => sum + item.quantity, 0)
+            totalItems: this.cart.reduce((sum, item) => sum + item.quantity, 0),
+            holiday: this.getHoliday()
         };
 
         try {
@@ -503,7 +688,7 @@ class OrderManager {
             if (result.success) {
                 // Success!
                 messageDiv.className = 'order-message success';
-                messageDiv.textContent = '✅ Order submitted successfully! You will receive confirmation shortly.';
+                messageDiv.textContent = 'Order submitted successfully! You will receive confirmation shortly.';
 
                 // Clear the form and cart
                 setTimeout(() => {
@@ -515,7 +700,7 @@ class OrderManager {
         } catch (error) {
             console.error('Order submission error:', error);
             messageDiv.className = 'order-message error';
-            messageDiv.textContent = `❌ ${error.message}. Please try again or call 281.236.3047`;
+            messageDiv.textContent = `${error.message}. Please try again or call 281.236.3047`;
             submitBtn.disabled = false;
             submitBtn.textContent = 'Submit Order';
         }
@@ -525,6 +710,8 @@ class OrderManager {
     clearOrderComplete() {
         this.cart = [];
         this.cartIdCounter = 0;
+        this.cookieSelections = {};
+        this.designDescriptions = {};
 
         // Reset all form fields
         document.getElementById('order-form').reset();

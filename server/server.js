@@ -23,8 +23,30 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
+app.get('/purim', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'purim.html'));
+});
+
+app.get('/valentines', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'valentines.html'));
+});
+
+// Legacy order route - redirect to home
 app.get('/order', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'order.html'));
+  res.redirect('/');
+});
+
+// Archive routes
+app.get('/archive/hanukkah', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'archive', 'hanukkah', 'index.html'));
+});
+
+app.get('/archive/hanukkah/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'archive', 'hanukkah', 'index.html'));
+});
+
+app.get('/archive/hanukkah/order.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'archive', 'hanukkah', 'order.html'));
 });
 
 // Order submission endpoint
@@ -32,7 +54,7 @@ app.post('/api/submit-order', async (req, res) => {
   try {
     const orderData = req.body;
 
-    console.log('📝 Received new order from:', orderData.customer.name);
+    console.log(`📝 Received new ${orderData.holiday || 'General'} order from:`, orderData.customer.name);
 
     // Validate order data
     if (!orderData.customer || !orderData.items || orderData.items.length === 0) {
@@ -99,7 +121,9 @@ async function startServer() {
     app.listen(PORT, () => {
       console.log('\n✨ Server is running!\n');
       console.log(`   🌐 Home page: http://localhost:${PORT}`);
-      console.log(`   🛒 Order page: http://localhost:${PORT}/order`);
+      console.log(`   🎭 Purim: http://localhost:${PORT}/purim`);
+      console.log(`   💝 Valentines: http://localhost:${PORT}/valentines`);
+      console.log(`   📁 Archive: http://localhost:${PORT}/archive/hanukkah/`);
       console.log(`\n   Press Ctrl+C to stop the server\n`);
     });
   } catch (error) {

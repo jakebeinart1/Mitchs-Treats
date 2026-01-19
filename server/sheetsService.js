@@ -34,25 +34,17 @@ class SheetsService {
 
   async ensureHeaders() {
     try {
+      // New multi-holiday headers
       const headers = [
         'Order ID',
         'Timestamp',
+        'Holiday',
         'Customer Name',
         'Email',
         'Phone',
         'Pickup Date',
-        'Sofganiyot - Strawberry Jam',
-        'Sofganiyot - Nutella',
-        'Sofganiyot - Dulce de Leche',
-        'Sofganiyot - Vanilla Custard',
-        'Sofganiyot - Biscoff',
-        'Sofganiyot - Marshmallows',
-        'Sofganiyot - Pistachio Cream',
-        'Cake Pops',
-        'Chocolate Covered Pretzels',
-        'Decorated Cookies',
-        'Plain Hanukkah Cookies',
-        'Cookie Decorating Kits',
+        'Pickup Time',
+        'Items Summary',
         'Special Instructions',
         'Total Items',
         'Total Amount'
@@ -61,7 +53,7 @@ class SheetsService {
       // Always update headers to ensure they match current structure
       await this.sheets.spreadsheets.values.update({
         spreadsheetId: this.sheetId,
-        range: 'Sheet1!A1:U1',
+        range: 'Sheet1!A1:L1',
         valueInputOption: 'RAW',
         resource: {
           values: [headers],
@@ -69,7 +61,7 @@ class SheetsService {
       });
 
       // Apply formatting
-      await this.formatSheet(21); // 21 columns total
+      await this.formatSheet(12); // 12 columns total
 
       console.log('✅ Sheet headers updated and formatted');
     } catch (error) {
@@ -92,7 +84,7 @@ class SheetsService {
             },
             cell: {
               userEnteredFormat: {
-                backgroundColor: { red: 0.0, green: 0.28, blue: 0.67 }, // Blue
+                backgroundColor: { red: 0.18, green: 0.22, blue: 0.28 }, // Dark charcoal
                 textFormat: {
                   foregroundColor: { red: 1.0, green: 1.0, blue: 1.0 }, // White
                   fontSize: 11,
@@ -199,86 +191,54 @@ class SheetsService {
     }
   }
 
+  // Format items into a readable summary
+  formatItemsSummary(items) {
+    return items.map(item => {
+      let summary = `${item.productName} x${item.quantity}`;
+      if (item.flavor) {
+        summary += ` (${item.flavor})`;
+      }
+      if (item.cookieSelection && item.cookieSelection.length > 0) {
+        summary += ` [Cookies: ${item.cookieSelection.join(', ')}]`;
+      }
+      if (item.designDescription) {
+        summary += ` [Design: ${item.designDescription}]`;
+      }
+      return summary;
+    }).join('\n');
+  }
+
   async addOrder(orderData) {
     try {
       const timestamp = new Date().toISOString();
       const orderId = `ORDER-${Date.now()}`;
 
-      // Create row data matching the headers
+      // Calculate total amount
+      let totalAmount = 0;
+      orderData.items.forEach(item => {
+        totalAmount += item.quantity * item.price;
+      });
+
+      // Create row data matching the new headers
       const rowData = [
         orderId,
         timestamp,
+        orderData.holiday || 'General',
         orderData.customer.name || '',
         orderData.customer.email || '',
         orderData.customer.phone || '',
         orderData.customer.pickupDate || '',
-      ];
-
-      // Initialize all product flavor columns
-      const productColumns = {
-        'sofganiyot-strawberry': 0,
-        'sofganiyot-nutella': 0,
-        'sofganiyot-dulce': 0,
-        'sofganiyot-vanilla': 0,
-        'sofganiyot-biscoff': 0,
-        'sofganiyot-marshmallows': 0,
-        'cake-pops': 0,
-        'pretzels': 0,
-        'decorated-cookies': 0,
-        'plain-cookies': 0,
-        'cookie-kit': 0,
-      };
-
-      // Calculate total amount
-      let totalAmount = 0;
-
-      // Fill in ordered items
-      orderData.items.forEach(item => {
-        totalAmount += item.quantity * item.price;
-
-        // Map products to their specific flavor columns
-        if (item.productId === 'sofganiyot-4') {
-          productColumns['sofganiyot-strawberry'] = item.quantity;
-        } else if (item.productId === 'sofganiyot-4.5') {
-          const flavorKey = this.getFlavorKey(item.flavor);
-          if (flavorKey) {
-            productColumns[flavorKey] = item.quantity;
-          }
-        } else if (item.productId === 'cake-pops') {
-          productColumns['cake-pops'] = item.quantity;
-        } else if (item.productId === 'pretzels') {
-          productColumns['pretzels'] = item.quantity;
-        } else if (item.productId === 'decorated-cookies') {
-          productColumns['decorated-cookies'] = item.quantity;
-        } else if (item.productId === 'plain-cookies') {
-          productColumns['plain-cookies'] = item.quantity;
-        } else if (item.productId === 'cookie-kit') {
-          productColumns['cookie-kit'] = item.quantity;
-        }
-      });
-
-      // Add to row in correct order
-      rowData.push(
-        productColumns['sofganiyot-strawberry'],
-        productColumns['sofganiyot-nutella'],
-        productColumns['sofganiyot-dulce'],
-        productColumns['sofganiyot-vanilla'],
-        productColumns['sofganiyot-biscoff'],
-        productColumns['sofganiyot-marshmallows'],
-        productColumns['cake-pops'],
-        productColumns['pretzels'],
-        productColumns['decorated-cookies'],
-        productColumns['plain-cookies'],
-        productColumns['cookie-kit'],
+        orderData.customer.pickupTime || '',
+        this.formatItemsSummary(orderData.items),
         orderData.specialInstructions || '',
         orderData.totalItems,
         `$${totalAmount.toFixed(2)}`
-      );
+      ];
 
       // Append to sheet
       await this.sheets.spreadsheets.values.append({
         spreadsheetId: this.sheetId,
-        range: 'Sheet1!A:Z',
+        range: 'Sheet1!A:L',
         valueInputOption: 'RAW',
         resource: {
           values: [rowData],
@@ -286,26 +246,14 @@ class SheetsService {
       });
 
       // Auto-resize columns after adding data
-      await this.autoResizeColumns(21); // 21 columns total
+      await this.autoResizeColumns(12); // 12 columns total
 
-      console.log(`✅ Order ${orderId} added to Google Sheets`);
+      console.log(`✅ Order ${orderId} added to Google Sheets (Holiday: ${orderData.holiday || 'General'})`);
       return { success: true, orderId };
     } catch (error) {
       console.error('❌ Error adding order to sheets:', error.message);
       throw error;
     }
-  }
-
-  getFlavorKey(flavor) {
-    const flavorMap = {
-      'Nutella': 'sofganiyot-nutella',
-      'Dulce de Leche': 'sofganiyot-dulce',
-      'Vanilla Custard': 'sofganiyot-vanilla',
-      'Biscoff': 'sofganiyot-biscoff',
-      'Marshmallows': 'sofganiyot-marshmallows',
-      'Pistachio Cream': 'sofganiyot-pistachio',
-    };
-    return flavorMap[flavor] || null;
   }
 
   async autoResizeColumns(numColumns) {

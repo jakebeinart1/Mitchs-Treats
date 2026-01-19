@@ -7,19 +7,26 @@
    CSS Variables & Design Tokens
    =========================== */
 :root {
-    /* Primary Colors */
-    --primary-blue: #0047AB;
-    --primary-blue-light: #4A8FE7;
-    --primary-blue-dark: #002A66;
+    /* Modern Primary - Charcoal/Slate */
+    --primary: #2D3748;
+    --primary-light: #4A5568;
+    --primary-dark: #1A202C;
 
-    /* Accent Colors */
-    --gold: #FFD700;
-    --gold-light: #FFE55C;
+    /* Accent - Warm Gold/Copper */
+    --accent: #C9A76B;
+    --accent-light: #E2C992;
+
+    /* Legacy aliases for compatibility */
+    --primary-blue: var(--primary);
+    --primary-blue-light: var(--primary-light);
+    --primary-blue-dark: var(--primary-dark);
+    --gold: var(--accent);
+    --gold-light: var(--accent-light);
     --rose-gold: #B76E79;
 
     /* Neutral Colors */
     --white: #FFFFFF;
-    --cream: #FFF9F0;
+    --cream: #FAFAF9;
     --gray-light: #F5F5F7;
     --gray-medium: #86868B;
     --gray-dark: #1D1D1F;
@@ -30,10 +37,11 @@
     --warning: #FF9500;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, #0047AB 0%, #4A8FE7 100%);
-    --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    --gradient-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+    --gradient-gold: var(--gradient-accent);
     --gradient-subtle: linear-gradient(180deg, #FFFFFF 0%, #F5F5F7 100%);
-    --gradient-hero: linear-gradient(135deg, #0047AB 0%, #4A8FE7 50%, #0047AB 100%);
+    --gradient-hero: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--primary) 100%);
 
     /* Shadows */
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -1700,5 +1708,359 @@ nav {
     100% {
         transform: scale(1);
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+}
+
+/* ===========================
+   Holiday Theme Overrides
+   =========================== */
+
+/* Purim Theme - Purple & Orange */
+.theme-purim {
+    --primary: #6B46C1;
+    --primary-light: #805AD5;
+    --primary-dark: #553C9A;
+    --accent: #F6AD55;
+    --accent-light: #FBD38D;
+    --primary-blue: var(--primary);
+    --primary-blue-light: var(--primary-light);
+    --primary-blue-dark: var(--primary-dark);
+    --gold: var(--accent);
+    --gold-light: var(--accent-light);
+    --gradient-primary: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+    --gradient-accent: linear-gradient(135deg, #F6AD55 0%, #FBD38D 100%);
+    --gradient-gold: var(--gradient-accent);
+    --gradient-hero: linear-gradient(135deg, #6B46C1 0%, #805AD5 50%, #6B46C1 100%);
+}
+
+/* Valentines Theme - Red & Pink */
+.theme-valentines {
+    --primary: #C53030;
+    --primary-light: #E53E3E;
+    --primary-dark: #9B2C2C;
+    --accent: #F687B3;
+    --accent-light: #FBB6CE;
+    --primary-blue: var(--primary);
+    --primary-blue-light: var(--primary-light);
+    --primary-blue-dark: var(--primary-dark);
+    --gold: var(--accent);
+    --gold-light: var(--accent-light);
+    --gradient-primary: linear-gradient(135deg, #C53030 0%, #E53E3E 100%);
+    --gradient-accent: linear-gradient(135deg, #F687B3 0%, #FBB6CE 100%);
+    --gradient-gold: var(--gradient-accent);
+    --gradient-hero: linear-gradient(135deg, #C53030 0%, #E53E3E 50%, #C53030 100%);
+}
+
+/* Hanukkah Theme (for archive) - Blue & Gold */
+.theme-hanukkah {
+    --primary: #0047AB;
+    --primary-light: #4A8FE7;
+    --primary-dark: #002A66;
+    --accent: #FFD700;
+    --accent-light: #FFE55C;
+    --primary-blue: var(--primary);
+    --primary-blue-light: var(--primary-light);
+    --primary-blue-dark: var(--primary-dark);
+    --gold: var(--accent);
+    --gold-light: var(--accent-light);
+    --gradient-primary: linear-gradient(135deg, #0047AB 0%, #4A8FE7 100%);
+    --gradient-accent: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    --gradient-gold: var(--gradient-accent);
+    --gradient-hero: linear-gradient(135deg, #0047AB 0%, #4A8FE7 50%, #0047AB 100%);
+}
+
+/* ===========================
+   Holiday Cards Section (Home Page)
+   =========================== */
+.holiday-cards {
+    padding: var(--space-2xl) var(--space-lg);
+    background: linear-gradient(135deg, var(--cream) 0%, var(--white) 100%);
+}
+
+.holiday-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--space-xl);
+    margin-top: var(--space-xl);
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.holiday-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-normal);
+    border: 2px solid transparent;
+}
+
+.holiday-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
+
+.holiday-card.purim:hover {
+    border-color: #6B46C1;
+}
+
+.holiday-card.valentines:hover {
+    border-color: #C53030;
+}
+
+.holiday-card-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+}
+
+.holiday-card-content {
+    padding: var(--space-lg);
+    text-align: center;
+}
+
+.holiday-card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: var(--space-sm);
+}
+
+.holiday-card.purim .holiday-card-title {
+    color: #6B46C1;
+}
+
+.holiday-card.valentines .holiday-card-title {
+    color: #C53030;
+}
+
+.holiday-card-description {
+    color: var(--gray-medium);
+    margin-bottom: var(--space-md);
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.holiday-card .btn {
+    display: inline-block;
+}
+
+.holiday-card.purim .btn-primary {
+    background: linear-gradient(135deg, #6B46C1 0%, #805AD5 100%);
+    color: var(--white);
+}
+
+.holiday-card.valentines .btn-primary {
+    background: linear-gradient(135deg, #C53030 0%, #E53E3E 100%);
+    color: var(--white);
+}
+
+/* ===========================
+   Photo Gallery Section
+   =========================== */
+.photo-gallery {
+    padding: var(--space-2xl) var(--space-lg);
+    background-color: var(--white);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+}
+
+.gallery-item {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+    aspect-ratio: 1;
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ===========================
+   Holiday-Specific Notice Section
+   =========================== */
+.holiday-notice {
+    padding: var(--space-2xl) var(--space-lg);
+    background: var(--gradient-hero);
+    margin: var(--space-xl) 0;
+    position: relative;
+}
+
+.theme-purim .holiday-notice,
+.theme-purim .hanukkah-notice {
+    background: linear-gradient(135deg, #553C9A 0%, #805AD5 100%);
+}
+
+.theme-valentines .holiday-notice,
+.theme-valentines .hanukkah-notice {
+    background: linear-gradient(135deg, #9B2C2C 0%, #E53E3E 100%);
+}
+
+/* ===========================
+   Pickup Time Selector (Valentines)
+   =========================== */
+.pickup-time-group {
+    margin-top: var(--space-md);
+}
+
+.pickup-time-group label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-weight: 600;
+    color: var(--gray-dark);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.pickup-time-group select {
+    width: 100%;
+    padding: var(--space-sm);
+    border: 2px solid var(--gray-light);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    transition: all var(--transition-fast);
+    background-color: var(--white);
+}
+
+/* ===========================
+   Cookie Box Multi-Select
+   =========================== */
+.cookie-selection {
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    background: var(--gray-light);
+    border-radius: var(--radius-md);
+}
+
+.cookie-selection-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--gray-dark);
+    margin-bottom: var(--space-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cookie-selection-count {
+    font-size: 0.85rem;
+    color: var(--gray-medium);
+    margin-bottom: var(--space-sm);
+}
+
+.cookie-selection-count.valid {
+    color: var(--success);
+}
+
+.cookie-selection-count.invalid {
+    color: var(--error);
+}
+
+.cookie-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-xs);
+}
+
+.cookie-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs);
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: 2px solid transparent;
+}
+
+.cookie-option:hover {
+    border-color: var(--primary-light);
+}
+
+.cookie-option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+}
+
+.cookie-option.selected {
+    background: var(--cream);
+    border-color: var(--primary);
+}
+
+.cookie-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cookie-option label {
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin: 0;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+/* ===========================
+   Design Description Field
+   =========================== */
+.design-description-group {
+    margin-top: var(--space-md);
+}
+
+.design-description-group label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-weight: 600;
+    color: var(--gray-dark);
+    font-size: 0.875rem;
+}
+
+.design-description-group textarea {
+    width: 100%;
+    padding: var(--space-sm);
+    border: 2px solid var(--gray-light);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ===========================
+   Responsive Holiday Cards
+   =========================== */
+@media (max-width: 768px) {
+    .holiday-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .holiday-card-image {
+        height: 200px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cookie-options {
+        grid-template-columns: 1fr;
     }
 }
