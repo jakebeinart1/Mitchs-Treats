@@ -43,14 +43,14 @@ const PRODUCTS = [
     quantityOptions: generateQuantityOptions(4, 36)
   },
   {
-    id: 'slutty-brownie',
-    name: 'Slutty Brownie (4")',
+    id: 'triple-layer-brownie',
+    name: 'Triple-Layer Brownie (4")',
     price: 8.00,
     images: [
       'images/Valentines/slutty browny (heart).heic',
       'images/Valentines/slutty browie square.heic'
     ],
-    description: 'Decadent layered brownie - choose heart or square shape',
+    description: 'An indulgent, layered dessert bar featuring a base of chocolate chip cookie dough, a middle layer of whole Oreo cookies, and a top layer of rich, fudgy brownie batter - choose heart or square shape',
     hasFlavorOptions: true,
     flavors: ['Heart Shape', 'Square Shape'],
     minQuantity: 1,
