@@ -35,7 +35,7 @@ const PRODUCTS = [
     id: 'candy-skewers',
     name: 'Candy Skewers',
     price: 2.75,
-    images: ['images/Valentines/Candy Skewer.heic'],
+    images: ['images/Valentines/Candy Skewer.jpg'],
     description: 'Colorful candy skewers (minimum order of 4)',
     hasFlavorOptions: false,
     defaultFlavor: 'Assorted',
@@ -47,8 +47,8 @@ const PRODUCTS = [
     name: 'Triple-Layer Brownie (4")',
     price: 8.00,
     images: [
-      'images/Valentines/slutty browny (heart).heic',
-      'images/Valentines/slutty browie square.heic'
+      'images/Valentines/Triple Layer Brownie Heart.jpg',
+      'images/Valentines/Triple Layer Brownie Square.jpg'
     ],
     description: 'An indulgent, layered dessert bar featuring a base of chocolate chip cookie dough, a middle layer of whole Oreo cookies, and a top layer of rich, fudgy brownie batter - choose heart or square shape',
     hasFlavorOptions: true,
