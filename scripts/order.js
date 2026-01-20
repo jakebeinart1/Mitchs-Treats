@@ -6,6 +6,7 @@ class OrderManager {
         this.cartIdCounter = 0; // Unique ID for each cart item
         this.cookieSelections = {}; // Track cookie selections for Cookie Gift Box
         this.designDescriptions = {}; // Track design descriptions for cakes
+        this.fillingSelections = {}; // Track filling selections for Hamantaschen
         this.init();
     }
 
@@ -84,6 +85,26 @@ class OrderManager {
             `;
         }
 
+        // Filling selection HTML for Hamantaschen (products with hasFillingSelection)
+        let fillingSelectionHTML = '';
+        if (product.hasFillingSelection && product.fillingOptions) {
+            this.fillingSelections[product.id] = [];
+            fillingSelectionHTML = `
+                <div class="filling-selection hidden" id="filling-selection-${product.id}">
+                    <div class="filling-selection-title">Select Up to 4 Fillings</div>
+                    <div class="filling-selection-count" id="filling-count-${product.id}">0 of 4 selected</div>
+                    <div class="filling-options">
+                        ${product.fillingOptions.map((option, index) => `
+                            <div class="filling-option" data-product-id="${product.id}" data-filling="${option}">
+                                <input type="checkbox" id="filling-${product.id}-${index}" data-product-id="${product.id}" data-filling="${option}">
+                                <label for="filling-${product.id}-${index}">${option}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
         card.innerHTML = `
             ${imageGalleryHTML}
             <div class="product-header">
@@ -115,6 +136,7 @@ class OrderManager {
                 </div>
                 ${cookieSelectionHTML}
                 ${designDescriptionHTML}
+                ${fillingSelectionHTML}
                 <div class="add-to-order-container hidden" id="add-btn-container-${product.id}">
                     <button class="btn btn-add-to-order" data-product-id="${product.id}">Add to Order</button>
                 </div>
@@ -168,6 +190,13 @@ class OrderManager {
         document.addEventListener('change', (e) => {
             if (e.target.type === 'checkbox' && e.target.dataset.cookie) {
                 this.handleCookieSelectionChange(e.target);
+            }
+        });
+
+        // Filling selection checkboxes (for Hamantaschen)
+        document.addEventListener('change', (e) => {
+            if (e.target.type === 'checkbox' && e.target.dataset.filling) {
+                this.handleFillingSelectionChange(e.target);
             }
         });
 
@@ -232,16 +261,57 @@ class OrderManager {
         const productId = select.dataset.productId;
         const flavor = select.value;
         const quantityGroup = document.getElementById(`quantity-group-${productId}`);
+        const product = PRODUCTS.find(p => p.id === productId);
 
         if (flavor) {
             // Flavor selected, show quantity dropdown
             quantityGroup.classList.remove('hidden');
+
+            // Show/hide filling selection based on fillingTrigger
+            if (product && product.hasFillingSelection && product.fillingTrigger) {
+                const fillingSelection = document.getElementById(`filling-selection-${productId}`);
+                if (fillingSelection) {
+                    if (flavor === product.fillingTrigger) {
+                        fillingSelection.classList.remove('hidden');
+                    } else {
+                        fillingSelection.classList.add('hidden');
+                        // Reset filling selections when hidden
+                        this.resetFillingSelection(productId);
+                    }
+                }
+            }
         } else {
             // No flavor, hide quantity and add button
             quantityGroup.classList.add('hidden');
             const addBtnContainer = document.getElementById(`add-btn-container-${productId}`);
             addBtnContainer.classList.add('hidden');
             document.getElementById(`quantity-${productId}`).value = '0';
+
+            // Hide filling selection
+            if (product && product.hasFillingSelection) {
+                const fillingSelection = document.getElementById(`filling-selection-${productId}`);
+                if (fillingSelection) {
+                    fillingSelection.classList.add('hidden');
+                    this.resetFillingSelection(productId);
+                }
+            }
+        }
+    }
+
+    // Reset filling selection for a product
+    resetFillingSelection(productId) {
+        this.fillingSelections[productId] = [];
+        const fillingSelection = document.getElementById(`filling-selection-${productId}`);
+        if (fillingSelection) {
+            const checkboxes = fillingSelection.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
+            const options = fillingSelection.querySelectorAll('.filling-option');
+            options.forEach(opt => opt.classList.remove('selected', 'disabled'));
+            const countEl = document.getElementById(`filling-count-${productId}`);
+            if (countEl) {
+                countEl.textContent = '0 of 4 selected';
+                countEl.classList.remove('valid', 'invalid');
+            }
         }
     }
 
@@ -282,6 +352,50 @@ class OrderManager {
         // Update checkbox visual states
         const cookieOptions = document.querySelectorAll(`.cookie-option[data-product-id="${productId}"]`);
         cookieOptions.forEach(option => {
+            const cb = option.querySelector('input[type="checkbox"]');
+            option.classList.toggle('selected', cb.checked);
+            option.classList.toggle('disabled', !cb.checked && count >= 4);
+        });
+
+        // Update add button visibility
+        this.updateAddButtonVisibility(productId);
+    }
+
+    // Handle filling selection for Hamantaschen
+    handleFillingSelectionChange(checkbox) {
+        const productId = checkbox.dataset.productId;
+        const fillingName = checkbox.dataset.filling;
+        const product = PRODUCTS.find(p => p.id === productId);
+
+        if (!product || !product.hasFillingSelection) return;
+
+        if (!this.fillingSelections[productId]) {
+            this.fillingSelections[productId] = [];
+        }
+
+        if (checkbox.checked) {
+            if (this.fillingSelections[productId].length < 4) {
+                this.fillingSelections[productId].push(fillingName);
+            } else {
+                checkbox.checked = false;
+                return;
+            }
+        } else {
+            this.fillingSelections[productId] = this.fillingSelections[productId].filter(f => f !== fillingName);
+        }
+
+        // Update count display
+        const countEl = document.getElementById(`filling-count-${productId}`);
+        const count = this.fillingSelections[productId].length;
+        countEl.textContent = `${count} of 4 selected`;
+        countEl.classList.remove('valid', 'invalid');
+        if (count >= 1 && count <= 4) {
+            countEl.classList.add('valid');
+        }
+
+        // Update checkbox visual states
+        const fillingOptions = document.querySelectorAll(`.filling-option[data-product-id="${productId}"]`);
+        fillingOptions.forEach(option => {
             const cb = option.querySelector('input[type="checkbox"]');
             option.classList.toggle('selected', cb.checked);
             option.classList.toggle('disabled', !cb.checked && count >= 4);
@@ -345,6 +459,14 @@ class OrderManager {
             }
         }
 
+        // Show filling selection for products with no trigger (like Hamantaschen Box)
+        if (product.hasFillingSelection && product.fillingTrigger === null) {
+            const fillingSelection = document.getElementById(`filling-selection-${productId}`);
+            if (fillingSelection) {
+                fillingSelection.classList.remove('hidden');
+            }
+        }
+
         // Update add button visibility
         this.updateAddButtonVisibility(productId);
     }
@@ -369,6 +491,19 @@ class OrderManager {
             if (count !== 4) {
                 addBtnContainer.classList.add('hidden');
                 return;
+            }
+        }
+
+        // Check filling selection requirement
+        if (product.hasFillingSelection) {
+            // Check if filling selection should be visible
+            const fillingSelection = document.getElementById(`filling-selection-${productId}`);
+            if (fillingSelection && !fillingSelection.classList.contains('hidden')) {
+                const count = this.fillingSelections[productId]?.length || 0;
+                if (count < 1) {
+                    addBtnContainer.classList.add('hidden');
+                    return;
+                }
             }
         }
 
@@ -413,6 +548,19 @@ class OrderManager {
             designDescription = designTextarea?.value.trim() || '';
         }
 
+        // Get filling selections for Hamantaschen
+        let fillingSelection = null;
+        if (product.hasFillingSelection) {
+            const fillingSelectionEl = document.getElementById(`filling-selection-${productId}`);
+            if (fillingSelectionEl && !fillingSelectionEl.classList.contains('hidden')) {
+                fillingSelection = this.fillingSelections[productId] || [];
+                if (fillingSelection.length < 1) {
+                    alert('Please select at least 1 filling');
+                    return;
+                }
+            }
+        }
+
         // Add to cart with unique ID
         this.cartIdCounter++;
         const cartItem = {
@@ -430,6 +578,10 @@ class OrderManager {
 
         if (designDescription) {
             cartItem.designDescription = designDescription;
+        }
+
+        if (fillingSelection && fillingSelection.length > 0) {
+            cartItem.fillingSelection = fillingSelection;
         }
 
         this.cart.push(cartItem);
@@ -508,6 +660,15 @@ class OrderManager {
             if (designTextarea) designTextarea.value = '';
         }
 
+        // Reset filling selection
+        if (product.hasFillingSelection) {
+            const fillingSelection = document.getElementById(`filling-selection-${productId}`);
+            if (fillingSelection) {
+                fillingSelection.classList.add('hidden');
+                this.resetFillingSelection(productId);
+            }
+        }
+
         // Hide add button
         const addBtnContainer = document.getElementById(`add-btn-container-${productId}`);
         addBtnContainer.classList.add('hidden');
@@ -542,6 +703,9 @@ class OrderManager {
             }
             if (item.cookieSelection && item.cookieSelection.length > 0) {
                 specsHTML += `<br>Cookies: ${item.cookieSelection.join(', ')}`;
+            }
+            if (item.fillingSelection && item.fillingSelection.length > 0) {
+                specsHTML += `<br>Fillings: ${item.fillingSelection.join(', ')}`;
             }
             if (item.designDescription) {
                 specsHTML += `<br>Design: ${item.designDescription}`;
@@ -712,6 +876,7 @@ class OrderManager {
         this.cartIdCounter = 0;
         this.cookieSelections = {};
         this.designDescriptions = {};
+        this.fillingSelections = {};
 
         // Reset all form fields
         document.getElementById('order-form').reset();

@@ -2019,6 +2019,95 @@ nav {
 }
 
 /* ===========================
+   Filling Selection Multi-Select (Hamantaschen)
+   =========================== */
+.filling-selection {
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    background: var(--gray-light);
+    border-radius: var(--radius-md);
+}
+
+.filling-selection-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--gray-dark);
+    margin-bottom: var(--space-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.filling-selection-count {
+    font-size: 0.85rem;
+    color: var(--gray-medium);
+    margin-bottom: var(--space-sm);
+}
+
+.filling-selection-count.valid {
+    color: var(--success);
+}
+
+.filling-selection-count.invalid {
+    color: var(--error);
+}
+
+.filling-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: var(--space-xs);
+}
+
+.filling-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs);
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: 2px solid transparent;
+}
+
+.filling-option:hover {
+    border-color: var(--primary-light);
+}
+
+.filling-option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+}
+
+.filling-option.selected {
+    background: var(--cream);
+    border-color: var(--primary);
+}
+
+.filling-option.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.filling-option label {
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin: 0;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+/* Theme override for Purim filling selection */
+.theme-purim .filling-option.selected {
+    border-color: var(--primary);
+    background: rgba(107, 70, 193, 0.1);
+}
+
+.theme-purim .filling-option:hover {
+    border-color: var(--primary-light);
+}
+
+/* ===========================
    Design Description Field
    =========================== */
 .design-description-group {

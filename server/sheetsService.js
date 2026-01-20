@@ -201,6 +201,9 @@ class SheetsService {
       if (item.cookieSelection && item.cookieSelection.length > 0) {
         summary += ` [Cookies: ${item.cookieSelection.join(', ')}]`;
       }
+      if (item.fillingSelection && item.fillingSelection.length > 0) {
+        summary += ` [Fillings: ${item.fillingSelection.join(', ')}]`;
+      }
       if (item.designDescription) {
         summary += ` [Design: ${item.designDescription}]`;
       }

@@ -32,10 +32,22 @@ const PRODUCTS = [
       'Peanut Butter',
       'Pistachio',
       'Dates',
-      'Assorted'
+      'Assorted - Pick up to 4 fillings'
     ],
     minQuantity: 15,
-    quantityOptions: generateQuantityOptions(15, 100)
+    quantityOptions: generateQuantityOptions(15, 100),
+    hasFillingSelection: true,
+    fillingOptions: [
+      'Poppyseed',
+      'Apricot',
+      'Raspberry',
+      'Chocolate',
+      'Nutella',
+      'Peanut Butter',
+      'Pistachio',
+      'Dates'
+    ],
+    fillingTrigger: 'Assorted - Pick up to 4 fillings'
   },
   {
     id: 'hamantaschen-box',
@@ -45,12 +57,24 @@ const PRODUCTS = [
       'images/Purim/Hamantachen Box 1.jpg',
       'images/Purim/Hamantachen Box 2.jpg'
     ],
-    description: 'Beautiful gift box containing 25 assorted hamantaschen',
+    description: 'Beautiful gift box containing 25 hamantaschen - pick up to 4 fillings',
     hasFlavorOptions: false,
-    defaultFlavor: 'Assorted (25 pieces)',
+    defaultFlavor: 'Custom Selection (25 pieces)',
     minQuantity: 1,
     quantityOptions: generateQuantityOptions(1, 10),
-    isKit: true
+    isKit: true,
+    hasFillingSelection: true,
+    fillingOptions: [
+      'Poppyseed',
+      'Apricot',
+      'Raspberry',
+      'Chocolate',
+      'Nutella',
+      'Peanut Butter',
+      'Pistachio',
+      'Dates'
+    ],
+    fillingTrigger: null
   },
   {
     id: 'mishloach-manot',

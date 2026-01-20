@@ -13,7 +13,7 @@ const PRODUCTS = [
     id: 'cake-pop',
     name: 'Cake Pop',
     price: 3.00,
-    images: ['images/Cake Pops/cakepop.jpg'],
+    images: ['images/Valentines/cake pops.png'],
     description: 'Delicious decorated cake pops (minimum order of 6)',
     hasFlavorOptions: false,
     defaultFlavor: 'Vanilla',
@@ -24,12 +24,37 @@ const PRODUCTS = [
     id: 'chocolate-pretzels',
     name: 'Chocolate Covered Pretzels',
     price: 2.00,
-    images: ['images/Chocolate Covered Pretzels/pretzels.jpg'],
+    images: ['images/Valentines/chocolate covered pretzels.png'],
     description: 'Chocolate covered pretzels with festive decorations (minimum order of 6)',
     hasFlavorOptions: false,
     defaultFlavor: 'Chocolate',
     minQuantity: 6,
     quantityOptions: generateQuantityOptions(6, 36)
+  },
+  {
+    id: 'candy-skewers',
+    name: 'Candy Skewers',
+    price: 2.75,
+    images: ['images/Valentines/Candy Skewer.heic'],
+    description: 'Colorful candy skewers (minimum order of 4)',
+    hasFlavorOptions: false,
+    defaultFlavor: 'Assorted',
+    minQuantity: 4,
+    quantityOptions: generateQuantityOptions(4, 36)
+  },
+  {
+    id: 'slutty-brownie',
+    name: 'Slutty Brownie (4")',
+    price: 8.00,
+    images: [
+      'images/Valentines/slutty browny (heart).heic',
+      'images/Valentines/slutty browie square.heic'
+    ],
+    description: 'Decadent layered brownie - choose heart or square shape',
+    hasFlavorOptions: true,
+    flavors: ['Heart Shape', 'Square Shape'],
+    minQuantity: 1,
+    quantityOptions: generateQuantityOptions(1, 10)
   },
   {
     id: 'decorated-cookies',

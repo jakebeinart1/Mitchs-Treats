@@ -73,6 +73,9 @@ class EmailService {
         if (item.cookieSelection && item.cookieSelection.length > 0) {
           itemsList += `\n  Cookies: ${item.cookieSelection.join(', ')}`;
         }
+        if (item.fillingSelection && item.fillingSelection.length > 0) {
+          itemsList += `\n  Fillings: ${item.fillingSelection.join(', ')}`;
+        }
         if (item.designDescription) {
           itemsList += `\n  Design: ${item.designDescription}`;
         }
@@ -209,6 +212,9 @@ Total Items: ${orderData.totalItems}
               }
               if (item.cookieSelection && item.cookieSelection.length > 0) {
                 details += `<div class="item-details">Cookies: ${item.cookieSelection.join(', ')}</div>`;
+              }
+              if (item.fillingSelection && item.fillingSelection.length > 0) {
+                details += `<div class="item-details">Fillings: ${item.fillingSelection.join(', ')}</div>`;
               }
               if (item.designDescription) {
                 details += `<div class="item-details">Design: ${item.designDescription}</div>`;
