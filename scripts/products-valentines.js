@@ -162,10 +162,7 @@ const PRODUCTS = [
     id: 'mini-cookie-cake-candy',
     name: 'Mini 3 Layered Cookie Cake (with candy)',
     price: 20.00,
-    images: [
-      'images/Valentines/Mini Cookie Cake 3 layers 1.jpg',
-      'images/Valentines/Mini cookie Cake 3 layers 2.1.jpg'
-    ],
+    images: ['images/Valentines/Mini cookie Cake 3 layers 2.1.jpg'],
     description: 'Three-layer cookie cake decorated with candy',
     hasFlavorOptions: false,
     defaultFlavor: 'With Candy',
@@ -177,10 +174,7 @@ const PRODUCTS = [
     id: 'mini-cookie-cake-plain',
     name: 'Mini 3 Layered Cookie Cake (no candy)',
     price: 15.00,
-    images: [
-      'images/Valentines/Mini Cookie Cake 3 layers 1.jpg',
-      'images/Valentines/Mini cookie Cake 3 layers 2.1.jpg'
-    ],
+    images: ['images/Valentines/Mini Cookie Cake 3 layers 1.jpg'],
     description: 'Three-layer cookie cake without candy decorations',
     hasFlavorOptions: false,
     defaultFlavor: 'No Candy',
