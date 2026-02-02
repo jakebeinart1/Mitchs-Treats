@@ -693,7 +693,15 @@ class OrderManager {
         let totalPrice = 0;
 
         this.cart.forEach(item => {
-            const itemTotal = item.quantity * item.price;
+            const product = PRODUCTS.find(p => p.id === item.productId);
+            let itemTotal;
+            if (product && product.hasBundlePricing) {
+                const bundles = Math.floor(item.quantity / product.bundleSize);
+                const remainder = item.quantity % product.bundleSize;
+                itemTotal = (bundles * product.bundlePrice) + (remainder * item.price);
+            } else {
+                itemTotal = item.quantity * item.price;
+            }
             totalItems += item.quantity;
             totalPrice += itemTotal;
 

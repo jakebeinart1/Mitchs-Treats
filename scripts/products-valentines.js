@@ -13,12 +13,63 @@ const PRODUCTS = [
     id: 'cake-pop',
     name: 'Cake Pop',
     price: 3.00,
-    images: ['images/Valentines/cake pops.png'],
-    description: 'Delicious decorated cake pops (minimum order of 6)',
+    images: [
+      'images/Valentines/cake pops.png',
+      'images/Valentines/donut-cake-pop.jpeg',
+      'images/Valentines/heart-cake-pop.jpeg'
+    ],
+    description: 'Delicious decorated cake pops - choose from classic, donut, or heart shapes (minimum order of 6, mix and match!)',
+    hasFlavorOptions: true,
+    flavors: ['Classic', 'Donut', 'Heart'],
+    minQuantity: 6,
+    quantityOptions: generateQuantityOptions(6, 36)
+  },
+  {
+    id: 'ice-cream-cake-pop',
+    name: 'Ice Cream Cake Pop',
+    price: 3.75,
+    images: ['images/Valentines/ice-cream-cake-pop.jpeg'],
+    description: 'Adorable cake pop shaped like an ice cream cone with sprinkles (minimum order of 6)',
     hasFlavorOptions: false,
     defaultFlavor: 'Vanilla',
     minQuantity: 6,
     quantityOptions: generateQuantityOptions(6, 36)
+  },
+  {
+    id: 'chocolate-marshmallow-rose',
+    name: 'Chocolate Covered Marshmallow Rose',
+    price: 1.75,
+    images: ['images/Valentines/chocolate-marshmallow-rose.jpeg'],
+    description: 'Beautiful chocolate covered marshmallow roses (minimum order of 6)',
+    hasFlavorOptions: false,
+    defaultFlavor: 'Chocolate',
+    minQuantity: 6,
+    quantityOptions: generateQuantityOptions(6, 36)
+  },
+  {
+    id: 'chocolate-covered-oreo',
+    name: 'Chocolate Covered Double Stuffed Oreo',
+    price: 3.00,
+    images: ['images/Valentines/chocolate-covered-oreo.jpeg'],
+    description: 'White chocolate covered double stuffed Oreos with Valentine\'s decorations (minimum order of 6)',
+    hasFlavorOptions: false,
+    defaultFlavor: 'White Chocolate',
+    minQuantity: 6,
+    quantityOptions: generateQuantityOptions(6, 36)
+  },
+  {
+    id: 'raspberry-cinnabon',
+    name: 'Raspberry Cinnabon',
+    price: 8.00,
+    images: ['images/Valentines/raspberry-cinnabon.jpeg'],
+    description: 'Delicious raspberry cinnamon roll with cream cheese frosting - $8 each or $28 for 4',
+    hasFlavorOptions: false,
+    defaultFlavor: 'Raspberry',
+    minQuantity: 1,
+    quantityOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    hasBundlePricing: true,
+    bundleSize: 4,
+    bundlePrice: 28.00
   },
   {
     id: 'chocolate-pretzels',
@@ -185,7 +236,8 @@ const PRODUCTS = [
       'Alfajores',
       'Blossom (peanut butter)',
       'Snickerdoodle',
-      'Pop tart bars'
+      'Pop tart bars',
+      'White chocolate chips strawberry cookies'
     ]
   },
   {
