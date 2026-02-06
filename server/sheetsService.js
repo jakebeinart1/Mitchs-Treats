@@ -53,7 +53,7 @@ class SheetsService {
       // Always update headers to ensure they match current structure
       await this.sheets.spreadsheets.values.update({
         spreadsheetId: this.sheetId,
-        range: 'Sheet1!A1:L1',
+        range: "'Other Holidays'!A1:L1",
         valueInputOption: 'RAW',
         resource: {
           values: [headers],
@@ -76,7 +76,7 @@ class SheetsService {
         {
           repeatCell: {
             range: {
-              sheetId: 0,
+              sheetId: 1421067520,
               startRowIndex: 0,
               endRowIndex: 1,
               startColumnIndex: 0,
@@ -102,7 +102,7 @@ class SheetsService {
         {
           autoResizeDimensions: {
             dimensions: {
-              sheetId: 0,
+              sheetId: 1421067520,
               dimension: 'COLUMNS',
               startIndex: 0,
               endIndex: numColumns,
@@ -113,7 +113,7 @@ class SheetsService {
         {
           updateBorders: {
             range: {
-              sheetId: 0,
+              sheetId: 1421067520,
               startRowIndex: 0,
               endRowIndex: 1000, // Apply to first 1000 rows
               startColumnIndex: 0,
@@ -155,7 +155,7 @@ class SheetsService {
         {
           updateSheetProperties: {
             properties: {
-              sheetId: 0,
+              sheetId: 1421067520,
               gridProperties: {
                 frozenRowCount: 1,
               },
@@ -167,7 +167,7 @@ class SheetsService {
         {
           updateDimensionProperties: {
             range: {
-              sheetId: 0,
+              sheetId: 1421067520,
               dimension: 'ROWS',
               startIndex: 0,
               endIndex: 1,
@@ -241,7 +241,7 @@ class SheetsService {
       // Append to sheet
       await this.sheets.spreadsheets.values.append({
         spreadsheetId: this.sheetId,
-        range: 'Sheet1!A:L',
+        range: "'Other Holidays'!A:L",
         valueInputOption: 'RAW',
         resource: {
           values: [rowData],
@@ -268,7 +268,7 @@ class SheetsService {
             {
               autoResizeDimensions: {
                 dimensions: {
-                  sheetId: 0,
+                  sheetId: 1421067520,
                   dimension: 'COLUMNS',
                   startIndex: 0,
                   endIndex: numColumns,
