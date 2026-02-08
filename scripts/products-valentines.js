@@ -59,17 +59,14 @@ const PRODUCTS = [
   },
   {
     id: 'raspberry-cinnabon',
-    name: 'Raspberry Cinnabon',
-    price: 8.00,
-    images: ['images/Valentines/raspberry-cinnabon.jpeg'],
-    description: 'Delicious raspberry cinnamon roll with cream cheese frosting - $8 each or $28 for 4',
+    name: 'Raspberry Cinnabon (8x8)',
+    price: 35.00,
+    images: ['images/Valentines/FullSizeRender.heic'],
+    description: 'Delicious raspberry cinnamon roll with cream cheese frosting - 8x8 tray',
     hasFlavorOptions: false,
     defaultFlavor: 'Raspberry',
     minQuantity: 1,
-    quantityOptions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    hasBundlePricing: true,
-    bundleSize: 4,
-    bundlePrice: 28.00
+    quantityOptions: generateQuantityOptions(1, 10)
   },
   {
     id: 'chocolate-pretzels',
