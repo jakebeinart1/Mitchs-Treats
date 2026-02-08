@@ -61,7 +61,7 @@ const PRODUCTS = [
     id: 'raspberry-cinnabon',
     name: 'Raspberry Cinnabon (8x8)',
     price: 35.00,
-    images: ['images/Valentines/FullSizeRender.heic'],
+    images: ['images/Valentines/raspberry-cinnabon.jpeg'],
     description: 'Delicious raspberry cinnamon roll with cream cheese frosting - 8x8 tray',
     hasFlavorOptions: false,
     defaultFlavor: 'Raspberry',
