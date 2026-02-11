@@ -44,13 +44,18 @@ class OrderManager {
             : '';
 
         // Image gallery HTML
+        const hasImages = product.images.length > 0;
         const hasMultipleImages = product.images.length > 1;
-        const imageGalleryHTML = `
+        const imageGalleryHTML = hasImages ? `
             <div class="product-image-container">
                 ${hasMultipleImages ? '<button class="image-nav image-nav-prev" data-product-id="' + product.id + '">‹</button>' : ''}
                 <img src="${product.images[0]}" alt="${product.name}" class="product-image" data-product-id="${product.id}" data-current-index="0">
                 ${hasMultipleImages ? '<button class="image-nav image-nav-next" data-product-id="' + product.id + '">›</button>' : ''}
                 ${hasMultipleImages ? '<div class="image-dots" id="dots-' + product.id + '"></div>' : ''}
+            </div>
+        ` : `
+            <div class="product-image-container">
+                <div class="product-image-placeholder">Image Coming Soon</div>
             </div>
         `;
 
@@ -105,11 +110,15 @@ class OrderManager {
             `;
         }
 
+        const priceDisplay = product.flavorPrices
+            ? `From $${Math.min(...Object.values(product.flavorPrices)).toFixed(2)}`
+            : `$${product.price.toFixed(2)} ${product.isKit ? '' : 'each'}`;
+
         card.innerHTML = `
             ${imageGalleryHTML}
             <div class="product-header">
                 <h3 class="product-name">${product.name}</h3>
-                <div class="product-price">$${product.price.toFixed(2)} ${product.isKit ? '' : 'each'}</div>
+                <div class="product-price">${priceDisplay}</div>
                 <p class="product-description">${product.description}</p>
                 ${minNote}
             </div>
@@ -569,7 +578,7 @@ class OrderManager {
             productName: product.name,
             quantity: quantity,
             flavor: flavor,
-            price: product.price
+            price: (product.flavorPrices && flavor && product.flavorPrices[flavor]) || product.price
         };
 
         if (cookieSelection) {
