@@ -28,6 +28,10 @@
     {
       "src": "*.html",
       "use": "@vercel/static"
+    },
+    {
+      "src": "archive/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -52,12 +56,28 @@
       "dest": "/labels/$1"
     },
     {
+      "src": "/archive/(.*)",
+      "dest": "/archive/$1"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "server/server.js"
     },
     {
       "src": "/order",
       "dest": "server/server.js"
+    },
+    {
+      "src": "/passover",
+      "dest": "/passover.html"
+    },
+    {
+      "src": "/valentines",
+      "dest": "/valentines.html"
+    },
+    {
+      "src": "/purim",
+      "dest": "/purim.html"
     },
     {
       "src": "/",
