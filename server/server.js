@@ -31,6 +31,10 @@ app.get('/valentines', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'valentines.html'));
 });
 
+app.get('/passover', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'passover.html'));
+});
+
 // Legacy order route - redirect to home
 app.get('/order', (req, res) => {
   res.redirect('/');
@@ -123,6 +127,7 @@ async function startServer() {
       console.log(`   🌐 Home page: http://localhost:${PORT}`);
       console.log(`   🎭 Purim: http://localhost:${PORT}/purim`);
       console.log(`   💝 Valentines: http://localhost:${PORT}/valentines`);
+      console.log(`   🍷 Passover: http://localhost:${PORT}/passover`);
       console.log(`   📁 Archive: http://localhost:${PORT}/archive/hanukkah/`);
       console.log(`\n   Press Ctrl+C to stop the server\n`);
     });

@@ -1930,6 +1930,10 @@ nav {
     animation-delay: 0.2s;
 }
 
+.holiday-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
 .holiday-card:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-xl);
@@ -2290,6 +2294,80 @@ nav {
     font-family: 'Inter', sans-serif;
     resize: vertical;
     min-height: 80px;
+}
+
+/* ===========================
+   Holiday Unavailable Styles
+   =========================== */
+.holiday-card.holiday-unavailable {
+    position: relative;
+    opacity: 0.7;
+}
+
+.holiday-card.holiday-unavailable:hover {
+    opacity: 0.85;
+}
+
+.holiday-card.holiday-unavailable .holiday-card-image {
+    filter: grayscale(40%);
+}
+
+.season-ended-badge {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    background: var(--gray-medium);
+    color: var(--white);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    z-index: 2;
+}
+
+.holiday-card.passover:hover {
+    border-color: #1A4B8C;
+}
+
+.holiday-card.passover .holiday-card-title {
+    color: #1A4B8C;
+}
+
+.holiday-card.passover .btn-primary {
+    background: linear-gradient(135deg, #1A4B8C 0%, #2B6CB0 100%);
+    color: var(--white);
+}
+
+/* Orders Closed Banner */
+.orders-closed-banner {
+    background: linear-gradient(135deg, #718096 0%, #A0AEC0 100%) !important;
+    border-color: #718096 !important;
+}
+
+.orders-closed-banner .notice-title {
+    color: var(--white);
+}
+
+/* Orders Closed Page */
+.orders-closed .order-form-section,
+.orders-closed .order-summary-section {
+    opacity: 0.5;
+    pointer-events: none;
+    position: relative;
+}
+
+.orders-closed .order-form-section::before {
+    content: 'Orders are currently closed for this holiday';
+    display: block;
+    text-align: center;
+    padding: var(--space-md);
+    background: #718096;
+    color: var(--white);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    margin-bottom: var(--space-md);
 }
 
 /* ===========================

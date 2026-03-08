@@ -72,6 +72,76 @@ const PRODUCTS = [
     quantityOptions: generateQuantityOptions(10, 50)
   },
   {
+    id: 'cookie-box',
+    name: 'Cookie Box',
+    price: 32.00,
+    images: ['images/Passover/Cookie Box.jpg'],
+    description: 'Assorted cookie box with pecan bars, lemon bars, almond cookies, and chocolate chip cookies (8 of each).',
+    hasFlavorOptions: false,
+    defaultFlavor: 'Assorted Box',
+    minQuantity: 1,
+    quantityOptions: generateQuantityOptions(1, 10),
+    isKit: true
+  },
+  {
+    id: 'macaroons',
+    name: 'Macaroons',
+    price: 2.50,
+    images: ['images/Passover/Macaroons.jpeg', 'images/Passover/Macaroons 2.jpeg'],
+    description: 'Delicate macaroons with your choice of filling. Regular: $2.50 each (min 6). Mini: $1.00 each (min 10). Contains nuts.',
+    hasFlavorOptions: true,
+    flavors: [
+      'Regular - Vanilla Buttercream - $2.50',
+      'Regular - Dulce Buttercream - $2.50',
+      'Mini - Vanilla Buttercream - $1.00',
+      'Mini - Dulce Buttercream - $1.00'
+    ],
+    flavorPrices: {
+      'Regular - Vanilla Buttercream - $2.50': 2.50,
+      'Regular - Dulce Buttercream - $2.50': 2.50,
+      'Mini - Vanilla Buttercream - $1.00': 1.00,
+      'Mini - Dulce Buttercream - $1.00': 1.00
+    },
+    minQuantity: 6,
+    quantityOptions: generateQuantityOptions(1, 50)
+  },
+  {
+    id: 'coconut-meringue',
+    name: 'Coconut Meringue',
+    price: 3.50,
+    images: ['images/Passover/Coconut Meringue.jpeg', 'images/Passover/Coconut Meringue 2.jpeg'],
+    description: 'Light and airy coconut meringues. Regular: $3.50 each. Mini: $1.50 each.',
+    hasFlavorOptions: true,
+    flavors: [
+      'Regular - $3.50',
+      'Mini - $1.50'
+    ],
+    flavorPrices: {
+      'Regular - $3.50': 3.50,
+      'Mini - $1.50': 1.50
+    },
+    minQuantity: 5,
+    quantityOptions: generateQuantityOptions(1, 50)
+  },
+  {
+    id: 'meringue',
+    name: 'Meringue',
+    price: 2.50,
+    images: ['images/Passover/Meringue.jpeg'],
+    description: 'Classic meringues with sprinkles. Regular: $2.50 each. Mini: $1.25 each.',
+    hasFlavorOptions: true,
+    flavors: [
+      'Regular - $2.50',
+      'Mini - $1.25'
+    ],
+    flavorPrices: {
+      'Regular - $2.50': 2.50,
+      'Mini - $1.25': 1.25
+    },
+    minQuantity: 5,
+    quantityOptions: generateQuantityOptions(1, 50)
+  },
+  {
     id: 'log-cake',
     name: 'Log Cake',
     price: 10.00,
@@ -158,18 +228,6 @@ const PRODUCTS = [
       'Dairy - $25': 25,
       'Parve - $35': 35
     },
-    minQuantity: 1,
-    quantityOptions: generateQuantityOptions(1, 10),
-    isKit: true
-  },
-  {
-    id: 'cookie-box',
-    name: 'Cookie Box',
-    price: 35.00,
-    images: ['images/Passover/Cookie Box.jpg'],
-    description: 'Assorted cookie box with pecan bars, lemon bars, almond cookies, and chocolate chip cookies (8 of each).',
-    hasFlavorOptions: false,
-    defaultFlavor: 'Assorted Box',
     minQuantity: 1,
     quantityOptions: generateQuantityOptions(1, 10),
     isKit: true
