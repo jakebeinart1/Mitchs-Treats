@@ -239,5 +239,28 @@
             <p>&copy; 2026 Mitch's Treats. All rights reserved. Made with love in Meyerland, Texas.</p>
         </div>
     </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const revealTargets = document.querySelectorAll('.holiday-card, .notice-box, .gallery-item, .payment-card, .note-card-compact');
+        revealTargets.forEach(el => el.classList.add('scroll-reveal'));
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.classList.contains('holiday-card') || entry.target.classList.contains('gallery-item')) {
+                        const siblings = Array.from(entry.target.parentElement.children);
+                        const index = siblings.indexOf(entry.target);
+                        entry.target.style.transitionDelay = `${index * 50}ms`;
+                    }
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealTargets.forEach(el => observer.observe(el));
+    });
+    </script>
 </body>
 </html>

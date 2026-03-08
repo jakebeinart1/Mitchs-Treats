@@ -925,4 +925,25 @@ class OrderManager {
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new OrderManager();
+
+    // Scroll reveal animations
+    const revealTargets = document.querySelectorAll('.product-card, .notice-box, .payment-cards, .gallery-section, .payment-options-section, .order-form-section, .order-summary-section');
+    revealTargets.forEach(el => el.classList.add('scroll-reveal'));
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Stagger product cards
+                if (entry.target.classList.contains('product-card')) {
+                    const cards = Array.from(document.querySelectorAll('.product-card.scroll-reveal'));
+                    const index = cards.indexOf(entry.target);
+                    entry.target.style.transitionDelay = `${index * 50}ms`;
+                }
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    revealTargets.forEach(el => observer.observe(el));
 });
