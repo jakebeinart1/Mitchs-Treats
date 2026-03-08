@@ -35,6 +35,10 @@ app.get('/passover', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'passover.html'));
 });
 
+app.get('/hanukkah', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'hanukkah.html'));
+});
+
 // Legacy order route - redirect to home
 app.get('/order', (req, res) => {
   res.redirect('/');

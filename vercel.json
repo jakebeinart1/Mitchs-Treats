@@ -80,6 +80,10 @@
       "dest": "/purim.html"
     },
     {
+      "src": "/hanukkah",
+      "dest": "/hanukkah.html"
+    },
+    {
       "src": "/",
       "dest": "server/server.js"
     }
