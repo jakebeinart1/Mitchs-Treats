@@ -1934,6 +1934,10 @@ nav {
     animation-delay: 0.3s;
 }
 
+.holiday-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
 .holiday-card:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-xl);
@@ -2338,6 +2342,14 @@ nav {
 .holiday-card.passover .btn-primary {
     background: linear-gradient(135deg, #1A4B8C 0%, #2B6CB0 100%);
     color: var(--white);
+}
+
+.holiday-card.hanukkah:hover {
+    border-color: #0047AB;
+}
+
+.holiday-card.hanukkah .holiday-card-title {
+    color: #0047AB;
 }
 
 /* Orders Closed Banner */
