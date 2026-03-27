@@ -1,35 +1,57 @@
 const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 class EmailService {
   constructor() {
     this.resend = null;
+    this.gmailTransporter = null;
     this.enabled = false;
+    this.gmailEnabled = false;
     this.fromEmail = process.env.RESEND_FROM_EMAIL || 'orders@mitchstreats.com';
     this.toEmail = process.env.RESEND_TO_EMAIL || 'mitchs.treats@gmail.com';
+    this.gmailUser = 'mitchs.treats@gmail.com';
   }
 
   async initialize() {
-    // Check if Resend API key is provided
+    // Initialize Resend for owner notifications
     if (!process.env.RESEND_API_KEY) {
       console.log('ℹ️  Email notifications disabled (no Resend API key provided)');
       this.enabled = false;
-      return false;
+    } else {
+      try {
+        this.resend = new Resend(process.env.RESEND_API_KEY);
+        console.log('✅ Email service initialized successfully (Resend)');
+        console.log(`   📧 Sending to: ${this.toEmail}`);
+        this.enabled = true;
+      } catch (error) {
+        console.error('⚠️  Email service initialization failed:', error.message);
+        this.enabled = false;
+      }
     }
 
-    try {
-      // Initialize Resend
-      this.resend = new Resend(process.env.RESEND_API_KEY);
-      console.log('✅ Email service initialized successfully (Resend)');
-      console.log(`   📧 Sending to: ${this.toEmail}`);
-      this.enabled = true;
-      return true;
-    } catch (error) {
-      console.error('⚠️  Email service initialization failed:', error.message);
-      console.log('ℹ️  Orders will still work, but email notifications are disabled');
-      this.enabled = false;
-      return false;
+    // Initialize Gmail for customer confirmations
+    if (!process.env.GMAIL_APP_PASSWORD) {
+      console.log('ℹ️  Customer confirmation emails disabled (no GMAIL_APP_PASSWORD provided)');
+      this.gmailEnabled = false;
+    } else {
+      try {
+        this.gmailTransporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: this.gmailUser,
+            pass: process.env.GMAIL_APP_PASSWORD,
+          },
+        });
+        console.log('✅ Gmail transporter initialized for customer confirmations');
+        this.gmailEnabled = true;
+      } catch (error) {
+        console.error('⚠️  Gmail initialization failed:', error.message);
+        this.gmailEnabled = false;
+      }
     }
+
+    return this.enabled;
   }
 
   // Get theme colors based on holiday
@@ -281,7 +303,7 @@ Total Items: ${orderData.totalItems}
   }
 
   async sendCustomerConfirmation(orderData) {
-    if (!this.enabled) return { success: false, skipped: true };
+    if (!this.gmailEnabled) return { success: false, skipped: true };
 
     const customerEmail = orderData.customer && orderData.customer.email;
     if (!customerEmail) {
@@ -453,18 +475,16 @@ Questions? Call or text 281.236.3047 or email mitchs.treats@gmail.com
 Mitch's Treats — Handmade with love
       `.trim();
 
-      const { data, error } = await this.resend.emails.send({
-        from: `Mitch's Treats <${this.fromEmail}>`,
-        to: [customerEmail],
+      const info = await this.gmailTransporter.sendMail({
+        from: `Mitch's Treats <${this.gmailUser}>`,
+        to: customerEmail,
         subject: `${theme.emoji} Your Mitch's Treats Order is Confirmed!`,
         text: textContent,
         html: htmlContent,
       });
 
-      if (error) throw new Error(error.message);
-
-      console.log('✅ Customer confirmation email sent:', data.id);
-      return { success: true, messageId: data.id };
+      console.log('✅ Customer confirmation email sent:', info.messageId);
+      return { success: true, messageId: info.messageId };
     } catch (error) {
       console.error('⚠️  Error sending customer confirmation:', error.message);
       return { success: false, error: error.message };
