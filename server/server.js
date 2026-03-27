@@ -72,11 +72,19 @@ app.post('/api/submit-order', async (req, res) => {
       });
     }
 
-    // Send email notification
+    // Send email notification to owner
     try {
       await emailService.sendOrderNotification(orderData);
     } catch (emailError) {
       console.error('Email error:', emailError.message);
+      // Continue even if email fails
+    }
+
+    // Send confirmation email to customer
+    try {
+      await emailService.sendCustomerConfirmation(orderData);
+    } catch (emailError) {
+      console.error('Customer confirmation email error:', emailError.message);
       // Continue even if email fails
     }
 
