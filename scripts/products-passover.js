@@ -109,7 +109,7 @@ const PRODUCTS = [
     id: 'coconut-meringue',
     name: 'Coconut Meringue',
     price: 3.50,
-    images: ['images/Passover/Coconut Meringue.jpeg', 'images/Passover/Coconut Meringue 2.jpeg'],
+    images: ['images/Passover/Meringue.jpeg'],
     description: 'Light and airy coconut meringues. Regular: $3.50 each. Mini: $1.50 each.',
     hasFlavorOptions: true,
     flavors: [
@@ -127,7 +127,7 @@ const PRODUCTS = [
     id: 'meringue',
     name: 'Meringue',
     price: 2.50,
-    images: ['images/Passover/Meringue.jpeg'],
+    images: ['images/Passover/Coconut Meringue.jpeg', 'images/Passover/Coconut Meringue 2.jpeg'],
     description: 'Classic meringues with sprinkles. Regular: $2.50 each. Mini: $1.25 each.',
     hasFlavorOptions: true,
     flavors: [
