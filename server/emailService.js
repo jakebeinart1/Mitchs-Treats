@@ -63,6 +63,10 @@ class EmailService {
         return { primary: '#C53030', accent: '#F687B3', emoji: '💝' };
       case 'Hanukkah':
         return { primary: '#0047AB', accent: '#FFD700', emoji: '🕎' };
+      case 'Challah & Babka':
+        return { primary: '#b07d2a', accent: '#e8c96e', emoji: '🍞' };
+      case 'Passover':
+        return { primary: '#1A4B8C', accent: '#C8A951', emoji: '✡️' };
       default:
         return { primary: '#2D3748', accent: '#C9A76B', emoji: '🍩' };
     }
