@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Purim Treats - Mitch's Treats</title>
-    <meta name="description" content="Order delicious handcrafted hamantaschen and Purim treats from Mitch's Treats. Fresh baked with love in Meyerland, Texas.">
+    <title>Challah & Babka - Mitch's Treats</title>
+    <meta name="description" content="Order fresh-baked challah buns, filled buns, challah bites, and chocolate babka from Mitch's Treats. Handcrafted with love in Meyerland, Texas.">
     <link rel="stylesheet" href="styles/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,400;1,500&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 </head>
-<body class="theme-purim">
+<body class="theme-challah">
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -20,10 +20,10 @@
             </div>
             <nav>
                 <a href="index.html" class="nav-link">Home</a>
-                <a href="challah.html" class="nav-link">Challah & Babka</a>
+                <a href="challah.html" class="nav-link active">Challah & Babka</a>
                 <a href="passover.html" class="nav-link">Passover</a>
                 <a href="valentines.html" class="nav-link">Valentines</a>
-                <a href="purim.html" class="nav-link active">Purim</a>
+                <a href="purim.html" class="nav-link">Purim</a>
                 <a href="hanukkah.html" class="nav-link">Hanukkah</a>
             </nav>
         </div>
@@ -31,46 +31,34 @@
 
     <!-- Hero Section -->
     <section class="hero-compact">
-        <div class="hero-with-videos">
-            <div class="hero-video left">
-                <video autoplay loop muted playsinline class="side-video">
-                    <source src="images/Purim/IMG_1633.MOV" type="video/quicktime">
-                    <source src="images/Purim/IMG_1633.MOV" type="video/mp4">
-                </video>
-            </div>
+        <div class="hero-centered">
             <div class="hero-content-compact">
-                <h1 class="hero-title-compact">Celebrate Purim with Delicious Hamantaschen</h1>
-                <p class="hero-subtitle-compact">Handcrafted traditional treats made fresh for your Purim celebration</p>
-                <a href="passover.html" class="btn btn-primary">View Current Menu</a>
-            </div>
-            <div class="hero-video right">
-                <video autoplay loop muted playsinline class="side-video">
-                    <source src="images/Purim/IMG_1633.MOV" type="video/quicktime">
-                    <source src="images/Purim/IMG_1633.MOV" type="video/mp4">
-                </video>
+                <h1 class="hero-title-compact">Fresh-Baked Challah & Babka</h1>
+                <p class="hero-subtitle-compact">Handcrafted challah buns, filled buns, bites, and chocolate babka — available year-round, made to order</p>
+                <a href="#order-section" class="btn btn-primary">Order Now</a>
             </div>
         </div>
     </section>
 
-    <!-- Purim Notice -->
+    <!-- Ordering Notice -->
     <section class="holiday-notice">
         <div class="container">
-            <div class="notice-box orders-closed-banner">
-                <h2 class="notice-title">We are not currently taking Purim orders</h2>
+            <div class="notice-box">
+                <h2 class="notice-title">Fresh-Baked to Order — Year Round</h2>
                 <div class="notice-content">
-                    <p><strong>Purim 2025 has passed.</strong></p>
-                    <p>Check back next season for our Purim menu!</p>
-                    <p>Browse our current offerings on the <a href="passover.html">Passover page</a>.</p>
+                    <p><strong>Orders must be placed at least one day in advance</strong></p>
+                    <p><strong>For same-day availability, call <a href="tel:2812363047" style="color: inherit;">(281) 236-3047</a></strong></p>
+                    <p class="notice-highlight">Order early to ensure freshness!</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Order Section -->
-    <div id="order-section" class="order-page orders-closed">
+    <div id="order-section" class="order-page">
         <div class="container">
-            <h1 class="page-title">Create Your Purim Order</h1>
-            <p class="page-subtitle">Select your favorite hamantaschen flavors and quantities below.</p>
+            <h1 class="page-title">Create Your Order</h1>
+            <p class="page-subtitle">Select your favorite challah items and quantities below.</p>
 
             <!-- Products Grid -->
             <div id="products-grid" class="products-grid">
@@ -154,7 +142,7 @@
                 </div>
                 <div class="form-actions">
                     <button type="button" id="clear-order-btn" class="btn btn-secondary">Clear Order</button>
-                    <button type="submit" id="submit-order-btn" class="btn btn-primary" form="order-form" disabled>Orders Closed</button>
+                    <button type="submit" id="submit-order-btn" class="btn btn-primary" form="order-form">Submit Order</button>
                 </div>
                 <div id="order-message" class="order-message"></div>
             </section>
@@ -167,28 +155,28 @@
             <h2 class="section-title">Important Ordering Information</h2>
             <div class="notes-horizontal">
                 <div class="note-card-compact">
-                    <div class="note-icon-small">📅</div>
+                    <div class="note-icon-small">&#x1F4C5;</div>
                     <div class="note-content">
                         <h3>Advance Orders</h3>
-                        <p>Orders must be placed at least <strong>2 days before</strong> pickup.</p>
+                        <p>Orders must be placed <strong>at least one day in advance</strong>.</p>
                     </div>
                 </div>
                 <div class="note-card-compact">
-                    <div class="note-icon-small">🎨</div>
+                    <div class="note-icon-small">&#x1F4DE;</div>
                     <div class="note-content">
-                        <h3>Custom Orders</h3>
-                        <p>We can <strong>customize orders</strong> for your event! Contact us to discuss.</p>
+                        <h3>Same-Day Orders</h3>
+                        <p>Call <strong><a href="tel:2812363047">281.236.3047</a></strong> to check same-day availability.</p>
                     </div>
                 </div>
                 <div class="note-card-compact">
-                    <div class="note-icon-small">📞</div>
+                    <div class="note-icon-small">&#x1F35E;</div>
                     <div class="note-content">
-                        <h3>Questions?</h3>
-                        <p>Call <strong><a href="tel:2812363047">281.236.3047</a></strong> for any inquiries.</p>
+                        <h3>Fresh Baked</h3>
+                        <p>Everything is baked <strong>fresh to order</strong> for maximum flavor.</p>
                     </div>
                 </div>
                 <div class="note-card-compact">
-                    <div class="note-icon-small">📍</div>
+                    <div class="note-icon-small">&#x1F4CD;</div>
                     <div class="note-content">
                         <h3>Pickup Location</h3>
                         <p>Pickup in <strong>Meyerland, Texas</strong>. Address provided upon confirmation.</p>
@@ -221,7 +209,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="scripts/products-purim.js"></script>
+    <script src="scripts/products-challah.js"></script>
     <script src="scripts/order.js"></script>
 </body>
 </html>

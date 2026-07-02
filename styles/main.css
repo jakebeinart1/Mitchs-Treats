@@ -1918,6 +1918,28 @@ nav {
     background: linear-gradient(135deg, #153E75 0%, #2B6CB0 100%);
 }
 
+/* Challah & Babka Theme - Warm Golden / Honey tones */
+.theme-challah {
+    --primary: #b07d2a;
+    --primary-light: #c8960e;
+    --primary-dark: #8b5e1a;
+    --accent: #e8c96e;
+    --accent-light: #f2dfa0;
+    --primary-blue: var(--primary);
+    --primary-blue-light: var(--primary-light);
+    --primary-blue-dark: var(--primary-dark);
+    --gold: var(--accent);
+    --gold-light: var(--accent-light);
+    --gradient-primary: linear-gradient(135deg, #b07d2a 0%, #c8960e 100%);
+    --gradient-accent: linear-gradient(135deg, #e8c96e 0%, #f2dfa0 100%);
+    --gradient-gold: var(--gradient-accent);
+    --gradient-hero: linear-gradient(135deg, #8b5e1a 0%, #b07d2a 50%, #8b5e1a 100%);
+}
+
+.theme-challah .holiday-notice {
+    background: linear-gradient(135deg, #7a4f10 0%, #b07d2a 100%);
+}
+
 /* ===========================
    Holiday Cards Section (Home Page)
    =========================== */
