@@ -18,7 +18,12 @@ const PRODUCTS = [
     hasFlavorOptions: true,
     flavors: ['Plain', 'Everything (ET)', 'Sesame', 'Assorted'],
     minQuantity: 6,
-    quantityOptions: generateQuantityOptions(6, 48)
+    quantityOptions: generateQuantityOptions(6, 48),
+    hasFillingSelection: true,
+    fillingTrigger: 'Assorted',
+    fillingOptions: ['Plain', 'Everything (ET)', 'Sesame'],
+    fillingSelectionTitle: 'Which toppings would you like in your mix?',
+    fillingMax: null
   },
   {
     id: 'filled-challah-buns',
@@ -43,7 +48,19 @@ const PRODUCTS = [
       'Assorted'
     ],
     minQuantity: 6,
-    quantityOptions: generateQuantityOptions(6, 48)
+    quantityOptions: generateQuantityOptions(6, 48),
+    hasFillingSelection: true,
+    fillingTrigger: 'Assorted',
+    fillingOptions: [
+      'Cream Cheese & Green Olives (dairy)',
+      'Boursin (dairy)',
+      'Nutella (dairy, contains nuts)',
+      'Pizza (dairy)',
+      'Pesto (contains nuts)',
+      'Chocolate Milk (parve)'
+    ],
+    fillingSelectionTitle: 'Which fillings would you like in your mix?',
+    fillingMax: null
   },
   {
     id: 'challah-bites',
@@ -81,7 +98,19 @@ const PRODUCTS = [
     ],
     minQuantity: 1,
     quantityOptions: generateQuantityOptions(1, 10),
-    isKit: true
+    isKit: true,
+    hasFillingSelection: true,
+    fillingTrigger: 'Assorted',
+    fillingOptions: [
+      'Cream Cheese & Green Olives (dairy)',
+      'Boursin (dairy)',
+      'Nutella (dairy, contains nuts)',
+      'Pizza (dairy)',
+      'Pesto (contains nuts)',
+      'Chocolate Milk (parve)'
+    ],
+    fillingSelectionTitle: 'Which fillings would you like in your mix?',
+    fillingMax: null
   },
   {
     id: 'chocolate-babka',

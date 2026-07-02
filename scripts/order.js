@@ -90,14 +90,17 @@ class OrderManager {
             `;
         }
 
-        // Filling selection HTML for Hamantaschen (products with hasFillingSelection)
+        // Filling selection HTML for Hamantaschen and Assorted challah products
         let fillingSelectionHTML = '';
         if (product.hasFillingSelection && product.fillingOptions) {
             this.fillingSelections[product.id] = [];
+            const selTitle = product.fillingSelectionTitle || 'Select Up to 4 Fillings';
+            const hasMax = product.fillingMax !== null && product.fillingMax !== undefined;
+            const maxLabel = hasMax ? product.fillingMax : 4;
             fillingSelectionHTML = `
                 <div class="filling-selection hidden" id="filling-selection-${product.id}">
-                    <div class="filling-selection-title">Select Up to 4 Fillings</div>
-                    <div class="filling-selection-count" id="filling-count-${product.id}">0 of 4 selected</div>
+                    <div class="filling-selection-title">${selTitle}</div>
+                    ${hasMax === false ? '' : `<div class="filling-selection-count" id="filling-count-${product.id}">0 of ${maxLabel} selected</div>`}
                     <div class="filling-options">
                         ${product.fillingOptions.map((option, index) => `
                             <div class="filling-option" data-product-id="${product.id}" data-filling="${option}">
@@ -382,8 +385,11 @@ class OrderManager {
             this.fillingSelections[productId] = [];
         }
 
+        const fillingMax = (product.fillingMax !== null && product.fillingMax !== undefined) ? product.fillingMax : 4;
+        const hasMax = product.fillingMax !== null && product.fillingMax !== undefined;
+
         if (checkbox.checked) {
-            if (this.fillingSelections[productId].length < 4) {
+            if (!hasMax || this.fillingSelections[productId].length < fillingMax) {
                 this.fillingSelections[productId].push(fillingName);
             } else {
                 checkbox.checked = false;
@@ -396,10 +402,12 @@ class OrderManager {
         // Update count display
         const countEl = document.getElementById(`filling-count-${productId}`);
         const count = this.fillingSelections[productId].length;
-        countEl.textContent = `${count} of 4 selected`;
-        countEl.classList.remove('valid', 'invalid');
-        if (count >= 1 && count <= 4) {
-            countEl.classList.add('valid');
+        if (countEl) {
+            countEl.textContent = `${count} of ${fillingMax} selected`;
+            countEl.classList.remove('valid', 'invalid');
+            if (count >= 1 && count <= fillingMax) {
+                countEl.classList.add('valid');
+            }
         }
 
         // Update checkbox visual states
@@ -407,7 +415,7 @@ class OrderManager {
         fillingOptions.forEach(option => {
             const cb = option.querySelector('input[type="checkbox"]');
             option.classList.toggle('selected', cb.checked);
-            option.classList.toggle('disabled', !cb.checked && count >= 4);
+            option.classList.toggle('disabled', hasMax && !cb.checked && count >= fillingMax);
         });
 
         // Update add button visibility
