@@ -96,6 +96,12 @@ class EmailService {
         if (item.flavor) {
           itemsList += `, Flavor: ${item.flavor}`;
         }
+        if (item.portionSelection) {
+          const breakdown = Object.entries(item.portionSelection)
+            .map(([k, v]) => `${k}: ${v}`)
+            .join(', ');
+          itemsList += `\n  Mix: ${breakdown}`;
+        }
         if (item.cookieSelection && item.cookieSelection.length > 0) {
           itemsList += `\n  Cookies: ${item.cookieSelection.join(', ')}`;
         }
@@ -236,6 +242,12 @@ Total Items: ${orderData.totalItems}
               if (item.flavor) {
                 details += `<div class="item-details">Flavor: ${item.flavor}</div>`;
               }
+              if (item.portionSelection) {
+                const breakdown = Object.entries(item.portionSelection)
+                  .map(([k, v]) => `${k}: ${v}`)
+                  .join(', ');
+                details += `<div class="item-details">Mix: ${breakdown}</div>`;
+              }
               if (item.cookieSelection && item.cookieSelection.length > 0) {
                 details += `<div class="item-details">Cookies: ${item.cookieSelection.join(', ')}</div>`;
               }
@@ -327,6 +339,12 @@ Total Items: ${orderData.totalItems}
 
         let details = '';
         if (item.flavor) details += `<div class="item-details">Flavor: ${item.flavor}</div>`;
+        if (item.portionSelection) {
+          const breakdown = Object.entries(item.portionSelection)
+            .map(([k, v]) => `${k}: ${v}`)
+            .join(', ');
+          details += `<div class="item-details">Mix: ${breakdown}</div>`;
+        }
         if (item.cookieSelection && item.cookieSelection.length > 0)
           details += `<div class="item-details">Cookies: ${item.cookieSelection.join(', ')}</div>`;
         if (item.fillingSelection && item.fillingSelection.length > 0)

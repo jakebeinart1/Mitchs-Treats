@@ -7,6 +7,7 @@ class OrderManager {
         this.cookieSelections = {}; // Track cookie selections for Cookie Gift Box
         this.designDescriptions = {}; // Track design descriptions for cakes
         this.fillingSelections = {}; // Track filling selections for Hamantaschen
+        this.portionSelections = {}; // Track per-option quantities for challah products
         this.init();
     }
 
@@ -90,6 +91,33 @@ class OrderManager {
             `;
         }
 
+        // Portion selection HTML — per-option quantity inputs (e.g. challah buns/filled buns)
+        let portionSelectionHTML = '';
+        if (product.hasPortionSelection && product.portionOptions) {
+            this.portionSelections[product.id] = {};
+            product.portionOptions.forEach(opt => { this.portionSelections[product.id][opt] = 0; });
+            portionSelectionHTML = `
+                <div class="portion-selection" id="portion-selection-${product.id}">
+                    <div class="portion-selection-title">Choose your quantities — minimum ${product.portionMin} ${product.portionLabel} total</div>
+                    <div class="portion-options">
+                        ${product.portionOptions.map((option, index) => `
+                            <div class="portion-option">
+                                <span class="portion-option-label">${option}</span>
+                                <div class="portion-qty-controls">
+                                    <button type="button" class="portion-qty-btn portion-minus" data-product-id="${product.id}" data-option-index="${index}">−</button>
+                                    <span class="portion-qty-value" id="portion-qty-${product.id}-${index}">0</span>
+                                    <button type="button" class="portion-qty-btn portion-plus" data-product-id="${product.id}" data-option-index="${index}">+</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="portion-total" id="portion-total-${product.id}">
+                        Total: <span id="portion-total-count-${product.id}">0</span> ${product.portionLabel} (minimum ${product.portionMin})
+                    </div>
+                </div>
+            `;
+        }
+
         // Filling selection HTML for Hamantaschen and Assorted challah products
         let fillingSelectionHTML = '';
         if (product.hasFillingSelection && product.fillingOptions) {
@@ -126,29 +154,31 @@ class OrderManager {
                 ${minNote}
             </div>
             <div class="product-controls">
-                ${product.hasFlavorOptions ? `
-                    <div class="form-group flavor-group" id="flavor-group-${product.id}">
-                        <label for="flavor-${product.id}">Flavor</label>
-                        <select id="flavor-${product.id}" class="flavor-select" data-product-id="${product.id}">
-                            <option value="">Select Flavor</option>
-                            ${product.flavors.map(flavor =>
-                                `<option value="${flavor}">${flavor}</option>`
+                ${product.hasPortionSelection ? portionSelectionHTML : `
+                    ${product.hasFlavorOptions ? `
+                        <div class="form-group flavor-group" id="flavor-group-${product.id}">
+                            <label for="flavor-${product.id}">Flavor</label>
+                            <select id="flavor-${product.id}" class="flavor-select" data-product-id="${product.id}">
+                                <option value="">Select Flavor</option>
+                                ${product.flavors.map(flavor =>
+                                    `<option value="${flavor}">${flavor}</option>`
+                                ).join('')}
+                            </select>
+                        </div>
+                    ` : ''}
+                    <div class="form-group ${product.hasFlavorOptions ? 'hidden' : ''}" id="quantity-group-${product.id}">
+                        <label for="quantity-${product.id}">Quantity</label>
+                        <select id="quantity-${product.id}" class="quantity-select" data-product-id="${product.id}">
+                            <option value="0">Select Quantity</option>
+                            ${(product.quantityOptions || []).map(qty =>
+                                `<option value="${qty}">${qty}</option>`
                             ).join('')}
                         </select>
                     </div>
-                ` : ''}
-                <div class="form-group ${product.hasFlavorOptions ? 'hidden' : ''}" id="quantity-group-${product.id}">
-                    <label for="quantity-${product.id}">Quantity</label>
-                    <select id="quantity-${product.id}" class="quantity-select" data-product-id="${product.id}">
-                        <option value="0">Select Quantity</option>
-                        ${product.quantityOptions.map(qty =>
-                            `<option value="${qty}">${qty}</option>`
-                        ).join('')}
-                    </select>
-                </div>
-                ${cookieSelectionHTML}
-                ${designDescriptionHTML}
-                ${fillingSelectionHTML}
+                    ${cookieSelectionHTML}
+                    ${designDescriptionHTML}
+                    ${fillingSelectionHTML}
+                `}
                 <div class="add-to-order-container hidden" id="add-btn-container-${product.id}">
                     <button class="btn btn-add-to-order" data-product-id="${product.id}">Add to Order</button>
                 </div>
@@ -181,6 +211,15 @@ class OrderManager {
             } else if (e.target.classList.contains('dot')) {
                 const index = parseInt(e.target.dataset.index);
                 this.setImage(e.target.dataset.productId, index);
+            }
+        });
+
+        // Portion qty +/- buttons
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('portion-plus')) {
+                this.handlePortionChange(e.target.dataset.productId, parseInt(e.target.dataset.optionIndex), 1);
+            } else if (e.target.classList.contains('portion-minus')) {
+                this.handlePortionChange(e.target.dataset.productId, parseInt(e.target.dataset.optionIndex), -1);
             }
         });
 
@@ -325,6 +364,36 @@ class OrderManager {
                 countEl.classList.remove('valid', 'invalid');
             }
         }
+    }
+
+    // Handle portion qty change (challah buns / filled buns)
+    handlePortionChange(productId, optionIndex, delta) {
+        const product = PRODUCTS.find(p => p.id === productId);
+        if (!product || !product.hasPortionSelection) return;
+
+        const option = product.portionOptions[optionIndex];
+        if (!this.portionSelections[productId]) this.portionSelections[productId] = {};
+
+        const current = this.portionSelections[productId][option] || 0;
+        this.portionSelections[productId][option] = Math.max(0, current + delta);
+
+        // Update qty display
+        const qtyEl = document.getElementById(`portion-qty-${productId}-${optionIndex}`);
+        if (qtyEl) qtyEl.textContent = this.portionSelections[productId][option];
+
+        // Update total
+        const total = Object.values(this.portionSelections[productId]).reduce((sum, v) => sum + v, 0);
+        const totalCountEl = document.getElementById(`portion-total-count-${productId}`);
+        if (totalCountEl) totalCountEl.textContent = total;
+
+        const totalEl = document.getElementById(`portion-total-${productId}`);
+        if (totalEl) {
+            totalEl.classList.toggle('valid', total >= product.portionMin);
+            totalEl.classList.toggle('invalid', total > 0 && total < product.portionMin);
+            totalEl.classList.toggle('neutral', total === 0);
+        }
+
+        this.updateAddButtonVisibility(productId);
     }
 
     // Handle cookie selection for Cookie Gift Box
@@ -494,6 +563,14 @@ class OrderManager {
         if (!product) return;
 
         const addBtnContainer = document.getElementById(`add-btn-container-${productId}`);
+
+        // Portion selection products — show button when total >= min
+        if (product.hasPortionSelection) {
+            const total = Object.values(this.portionSelections[productId] || {}).reduce((sum, v) => sum + v, 0);
+            addBtnContainer.classList.toggle('hidden', total < product.portionMin);
+            return;
+        }
+
         const quantitySelect = document.getElementById(`quantity-${productId}`);
         const quantity = parseInt(quantitySelect.value);
 
@@ -532,6 +609,43 @@ class OrderManager {
     handleAddToOrder(productId) {
         const product = PRODUCTS.find(p => p.id === productId);
         if (!product) return;
+
+        // Portion selection path (challah buns, filled buns, filled bites)
+        if (product.hasPortionSelection) {
+            const portions = this.portionSelections[productId] || {};
+            const total = Object.values(portions).reduce((sum, v) => sum + v, 0);
+            if (total < product.portionMin) {
+                alert(`Minimum order is ${product.portionMin} ${product.portionLabel}`);
+                return;
+            }
+            this.cartIdCounter++;
+            const cartItem = {
+                cartItemId: this.cartIdCounter,
+                productId: product.id,
+                productName: product.name,
+                quantity: total,
+                price: product.price,
+                portionSelection: Object.fromEntries(
+                    Object.entries(portions).filter(([, v]) => v > 0)
+                )
+            };
+            this.cart.push(cartItem);
+            this.resetProductCard(productId);
+            this.updateOrderSummary();
+            const addBtn = document.querySelector(`.btn-add-to-order[data-product-id="${productId}"]`);
+            if (addBtn) {
+                const orig = addBtn.textContent;
+                addBtn.textContent = 'Added!';
+                addBtn.style.background = 'linear-gradient(135deg, #34C759 0%, #28A745 100%)';
+                addBtn.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    addBtn.textContent = orig;
+                    addBtn.style.background = '';
+                    addBtn.style.transform = '';
+                }, 1500);
+            }
+            return;
+        }
 
         const quantitySelect = document.getElementById(`quantity-${productId}`);
         const quantity = parseInt(quantitySelect.value);
@@ -639,6 +753,23 @@ class OrderManager {
         const product = PRODUCTS.find(p => p.id === productId);
         if (!product) return;
 
+        // Reset portion selection
+        if (product.hasPortionSelection) {
+            this.portionSelections[productId] = {};
+            product.portionOptions.forEach((opt, index) => {
+                this.portionSelections[productId][opt] = 0;
+                const qtyEl = document.getElementById(`portion-qty-${productId}-${index}`);
+                if (qtyEl) qtyEl.textContent = '0';
+            });
+            const totalCountEl = document.getElementById(`portion-total-count-${productId}`);
+            if (totalCountEl) totalCountEl.textContent = '0';
+            const totalEl = document.getElementById(`portion-total-${productId}`);
+            if (totalEl) totalEl.classList.remove('valid', 'invalid', 'neutral');
+            const addBtnContainer = document.getElementById(`add-btn-container-${productId}`);
+            if (addBtnContainer) addBtnContainer.classList.add('hidden');
+            return;
+        }
+
         // Reset quantity
         const quantitySelect = document.getElementById(`quantity-${productId}`);
         const quantityGroup = document.getElementById(`quantity-group-${productId}`);
@@ -725,6 +856,12 @@ class OrderManager {
             let specsHTML = `Quantity: ${item.quantity}`;
             if (item.flavor) {
                 specsHTML += ` • ${item.flavor}`;
+            }
+            if (item.portionSelection) {
+                const breakdown = Object.entries(item.portionSelection)
+                    .map(([k, v]) => `${k}: ${v}`)
+                    .join(' • ');
+                specsHTML += `<br>${breakdown}`;
             }
             if (item.cookieSelection && item.cookieSelection.length > 0) {
                 specsHTML += `<br>Cookies: ${item.cookieSelection.join(', ')}`;
@@ -902,6 +1039,7 @@ class OrderManager {
         this.cookieSelections = {};
         this.designDescriptions = {};
         this.fillingSelections = {};
+        this.portionSelections = {};
 
         // Reset all form fields
         document.getElementById('order-form').reset();

@@ -198,6 +198,12 @@ class SheetsService {
       if (item.flavor) {
         summary += ` (${item.flavor})`;
       }
+      if (item.portionSelection) {
+        const breakdown = Object.entries(item.portionSelection)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join(', ');
+        summary += ` [Mix: ${breakdown}]`;
+      }
       if (item.cookieSelection && item.cookieSelection.length > 0) {
         summary += ` [Cookies: ${item.cookieSelection.join(', ')}]`;
       }

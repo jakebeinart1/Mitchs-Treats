@@ -7,23 +7,18 @@ function generateQuantityOptions(min, max) {
   return options;
 }
 
-// Product catalog for Mitch's Treats - Challah & Babka (year-round)
+// Product catalog for Mitch's Treats - Fresh Baked Challah Buns & Babka (year-round)
 const PRODUCTS = [
   {
     id: 'challah-buns',
     name: 'Challah Buns',
     price: 2.00,
     images: ['images/challah pics/image5.jpeg'],
-    description: 'Soft, golden challah buns with your choice of topping. $2 each, minimum 6. All parve. About 50g each. Can order assorted — minimum 6 total.',
-    hasFlavorOptions: true,
-    flavors: ['Plain', 'Everything (ET)', 'Sesame', 'Assorted'],
-    minQuantity: 6,
-    quantityOptions: generateQuantityOptions(6, 48),
-    hasFillingSelection: true,
-    fillingTrigger: 'Assorted',
-    fillingOptions: ['Plain', 'Everything (ET)', 'Sesame'],
-    fillingSelectionTitle: 'Which toppings would you like in your mix?',
-    fillingMax: null
+    description: 'Soft, golden challah buns with your choice of topping. $2 each, minimum 6. All parve. About 50g each. Mix and match any toppings!',
+    hasPortionSelection: true,
+    portionOptions: ['Plain', 'Everything (ET)', 'Sesame'],
+    portionMin: 6,
+    portionLabel: 'buns'
   },
   {
     id: 'filled-challah-buns',
@@ -36,22 +31,9 @@ const PRODUCTS = [
       'images/challah pics/image1.jpeg',
       'images/challah pics/image2.jpeg'
     ],
-    description: 'Challah buns filled with your choice of filling. $2.50 each, minimum 6. Can order assorted — minimum 6 total.',
-    hasFlavorOptions: true,
-    flavors: [
-      'Cream Cheese & Green Olives (dairy)',
-      'Boursin (dairy)',
-      'Nutella (dairy, contains nuts)',
-      'Pizza (dairy)',
-      'Pesto (contains nuts)',
-      'Chocolate Milk (parve)',
-      'Assorted'
-    ],
-    minQuantity: 6,
-    quantityOptions: generateQuantityOptions(6, 48),
-    hasFillingSelection: true,
-    fillingTrigger: 'Assorted',
-    fillingOptions: [
+    description: 'Challah buns filled with your choice of filling. $2.50 each, minimum 6. Mix and match any fillings!',
+    hasPortionSelection: true,
+    portionOptions: [
       'Cream Cheese & Green Olives (dairy)',
       'Boursin (dairy)',
       'Nutella (dairy, contains nuts)',
@@ -59,8 +41,8 @@ const PRODUCTS = [
       'Pesto (contains nuts)',
       'Chocolate Milk (parve)'
     ],
-    fillingSelectionTitle: 'Which fillings would you like in your mix?',
-    fillingMax: null
+    portionMin: 6,
+    portionLabel: 'buns'
   },
   {
     id: 'challah-bites',
@@ -85,23 +67,9 @@ const PRODUCTS = [
       'images/challah pics/image6.jpeg',
       'images/challah pics/image7.jpeg'
     ],
-    description: 'Bite-sized challah rolls filled with your choice of filling. $18 per dozen. Can order assorted fillings — minimum 1 dozen.',
-    hasFlavorOptions: true,
-    flavors: [
-      'Cream Cheese & Green Olives (dairy)',
-      'Boursin (dairy)',
-      'Nutella (dairy, contains nuts)',
-      'Pizza (dairy)',
-      'Pesto (contains nuts)',
-      'Chocolate Milk (parve)',
-      'Assorted'
-    ],
-    minQuantity: 1,
-    quantityOptions: generateQuantityOptions(1, 10),
-    isKit: true,
-    hasFillingSelection: true,
-    fillingTrigger: 'Assorted',
-    fillingOptions: [
+    description: 'Bite-sized challah rolls filled with your choice of filling. $18 per dozen. Mix and match any fillings!',
+    hasPortionSelection: true,
+    portionOptions: [
       'Cream Cheese & Green Olives (dairy)',
       'Boursin (dairy)',
       'Nutella (dairy, contains nuts)',
@@ -109,8 +77,9 @@ const PRODUCTS = [
       'Pesto (contains nuts)',
       'Chocolate Milk (parve)'
     ],
-    fillingSelectionTitle: 'Which fillings would you like in your mix?',
-    fillingMax: null
+    portionMin: 1,
+    portionLabel: 'dozen',
+    isKit: true
   },
   {
     id: 'chocolate-babka',

@@ -2236,6 +2236,106 @@ nav {
 /* ===========================
    Filling Selection Multi-Select (Hamantaschen)
    =========================== */
+/* ===========================
+   Portion Selection (per-option qty for challah products)
+   =========================== */
+.portion-selection {
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    background: var(--gray-light);
+    border-radius: var(--radius-md);
+}
+
+.portion-selection-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--gray-dark);
+    margin-bottom: var(--space-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.portion-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: var(--space-sm);
+}
+
+.portion-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: 0.5rem var(--space-xs);
+    background: var(--white);
+    border-radius: var(--radius-sm);
+}
+
+.portion-option-label {
+    font-size: 0.9rem;
+    color: var(--gray-dark);
+    flex: 1;
+}
+
+.portion-qty-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.portion-qty-btn {
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--primary);
+    background: var(--white);
+    color: var(--primary);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.portion-qty-btn:hover {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.portion-qty-value {
+    min-width: 28px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--gray-dark);
+}
+
+.portion-total {
+    font-size: 0.875rem;
+    color: var(--gray-medium);
+    padding: 0.5rem var(--space-xs);
+    border-radius: var(--radius-sm);
+    background: var(--cream);
+    text-align: center;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+
+.portion-total.valid {
+    color: var(--success);
+    background: #f0fff4;
+    font-weight: 600;
+}
+
+.portion-total.invalid {
+    color: var(--warning);
+    background: #fff9f0;
+}
+
 .filling-selection {
     margin-top: var(--space-md);
     padding: var(--space-md);
