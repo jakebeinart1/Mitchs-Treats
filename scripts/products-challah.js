@@ -13,7 +13,10 @@ const PRODUCTS = [
     id: 'challah-buns',
     name: 'Challah Buns',
     price: 2.00,
-    images: ['images/challah pics/image5.jpeg'],
+    images: [
+      'images/challah pics/plain-buns-new.jpeg',
+      'images/challah pics/et-topping-new.jpeg'
+    ],
     description: 'Soft, golden challah buns with your choice of topping. $2 each, minimum 6. All parve. About 50g each. Mix and match any toppings!',
     hasPortionSelection: true,
     portionOptions: ['Plain', 'Everything (ET)', 'Sesame'],
@@ -26,10 +29,11 @@ const PRODUCTS = [
     price: 2.50,
     images: [
       'images/challah pics/image3.jpeg',
-      'images/challah pics/image4.jpeg',
-      'images/challah pics/image0.jpeg',
+      'images/challah pics/boursin-new.jpeg',
+      'images/challah pics/pizza-new.jpeg',
       'images/challah pics/image1.jpeg',
-      'images/challah pics/image2.jpeg'
+      'images/challah pics/image2.jpeg',
+      'images/challah pics/nutella-new.jpeg'
     ],
     description: 'Challah buns filled with your choice of filling. $2.50 each, minimum 6. Mix and match any fillings!',
     hasPortionSelection: true,
