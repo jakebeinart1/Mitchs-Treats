@@ -963,18 +963,9 @@ class OrderManager {
             const r = PICKUP_RULES;
             const fmt = d => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
             if (pickupDate < r.start) {
-                alert(`Pickup dates are only available starting ${fmt(r.start)}. For earlier dates, please call 281.236.3047.`);
+                alert(`Production begins ${fmt(r.start)}. For orders before then, please contact Michal directly at 281.236.3047 for availability.`);
                 document.getElementById('pickup-date').focus();
                 return false;
-            }
-            if (pickupDate < r.firstNight) {
-                const total = this.cart
-                    .filter(item => PRODUCTS.find(p => p.id === item.productId)?.isSufganiyot)
-                    .reduce((sum, item) => sum + item.quantity, 0);
-                if (total > 0 && total < r.minSufganiyotBeforeFirstNight) {
-                    alert(`Orders before the first night (${fmt(r.firstNight)}) require a minimum of ${r.minSufganiyotBeforeFirstNight} sufganiyot TOTAL. You currently have ${total}. Please add more sufganiyot or choose a later pickup date.`);
-                    return false;
-                }
             }
         }
 
