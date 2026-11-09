@@ -53,6 +53,7 @@ class OrderManager {
                 <img src="${product.images[0]}" alt="${product.name}" class="product-image" data-product-id="${product.id}" data-current-index="0">
                 ${hasMultipleImages ? '<button class="image-nav image-nav-next" data-product-id="' + product.id + '">›</button>' : ''}
                 ${hasMultipleImages ? '<div class="image-dots" id="dots-' + product.id + '"></div>' : ''}
+                ${product.imageBanner ? `<span class="image-banner">${product.imageBanner}</span>` : ''}
             </div>
         ` : `
             <div class="product-image-container">
@@ -157,9 +158,9 @@ class OrderManager {
                 ${product.hasPortionSelection ? portionSelectionHTML : `
                     ${product.hasFlavorOptions ? `
                         <div class="form-group flavor-group" id="flavor-group-${product.id}">
-                            <label for="flavor-${product.id}">Flavor</label>
+                            <label for="flavor-${product.id}">${product.flavorLabel || 'Flavor'}</label>
                             <select id="flavor-${product.id}" class="flavor-select" data-product-id="${product.id}">
-                                <option value="">Select Flavor</option>
+                                <option value="">Select ${product.flavorLabel || 'Flavor'}</option>
                                 ${product.flavors.map(flavor =>
                                     `<option value="${flavor}">${flavor}</option>`
                                 ).join('')}
@@ -955,6 +956,26 @@ class OrderManager {
             alert('Please select a pickup date');
             document.getElementById('pickup-date').focus();
             return false;
+        }
+
+        // Holiday pickup-date rules (e.g. Hanukkah). Dates compared as YYYY-MM-DD strings to avoid timezone shifts.
+        if (typeof PICKUP_RULES !== 'undefined') {
+            const r = PICKUP_RULES;
+            const fmt = d => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+            if (pickupDate < r.start) {
+                alert(`Pickup dates are only available starting ${fmt(r.start)}. For earlier dates, please call 281.236.3047.`);
+                document.getElementById('pickup-date').focus();
+                return false;
+            }
+            if (pickupDate < r.firstNight) {
+                const total = this.cart
+                    .filter(item => PRODUCTS.find(p => p.id === item.productId)?.isSufganiyot)
+                    .reduce((sum, item) => sum + item.quantity, 0);
+                if (total > 0 && total < r.minSufganiyotBeforeFirstNight) {
+                    alert(`Orders before the first night (${fmt(r.firstNight)}) require a minimum of ${r.minSufganiyotBeforeFirstNight} sufganiyot TOTAL. You currently have ${total}. Please add more sufganiyot or choose a later pickup date.`);
+                    return false;
+                }
+            }
         }
 
         // Validate pickup time for Valentines

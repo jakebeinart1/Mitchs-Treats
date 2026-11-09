@@ -6,6 +6,12 @@ class SheetsService {
     this.sheetId = process.env.GOOGLE_SHEET_ID;
     this.auth = null;
     this.sheets = null;
+    this.tabIds = {}; // tab title -> numeric sheetId
+  }
+
+  // Which tab an order goes to. Unlisted holidays share 'Other Holidays'.
+  tabFor(holiday) {
+    return { Hanukkah: 'Hanukkah 2026' }[holiday] || 'Other Holidays';
   }
 
   async initialize() {
@@ -21,8 +27,12 @@ class SheetsService {
 
       this.sheets = google.sheets({ version: 'v4', auth: this.auth });
 
+      // Look up tab ids, creating the Hanukkah tab if it doesn't exist yet
+      await this.ensureTab(this.tabFor('Hanukkah'));
+
       // Initialize sheet headers if needed
-      await this.ensureHeaders();
+      await this.ensureHeaders('Other Holidays');
+      await this.ensureHeaders(this.tabFor('Hanukkah'));
 
       console.log('✅ Google Sheets service initialized successfully');
       return true;
@@ -32,7 +42,26 @@ class SheetsService {
     }
   }
 
-  async ensureHeaders() {
+  async loadTabIds() {
+    const { data } = await this.sheets.spreadsheets.get({
+      spreadsheetId: this.sheetId,
+      fields: 'sheets.properties(sheetId,title)',
+    });
+    data.sheets.forEach(({ properties: p }) => { this.tabIds[p.title] = p.sheetId; });
+  }
+
+  async ensureTab(title) {
+    await this.loadTabIds();
+    if (this.tabIds[title] !== undefined) return;
+    await this.sheets.spreadsheets.batchUpdate({
+      spreadsheetId: this.sheetId,
+      resource: { requests: [{ addSheet: { properties: { title } } }] },
+    });
+    await this.loadTabIds();
+    console.log(`✅ Created sheet tab '${title}'`);
+  }
+
+  async ensureHeaders(tab) {
     try {
       // New multi-holiday headers
       const headers = [
@@ -53,7 +82,7 @@ class SheetsService {
       // Always update headers to ensure they match current structure
       await this.sheets.spreadsheets.values.update({
         spreadsheetId: this.sheetId,
-        range: "'Other Holidays'!A1:L1",
+        range: `'${tab}'!A1:L1`,
         valueInputOption: 'RAW',
         resource: {
           values: [headers],
@@ -61,7 +90,7 @@ class SheetsService {
       });
 
       // Apply formatting
-      await this.formatSheet(12); // 12 columns total
+      await this.formatSheet(this.tabIds[tab], 12); // 12 columns total
 
       console.log('✅ Sheet headers updated and formatted');
     } catch (error) {
@@ -69,14 +98,14 @@ class SheetsService {
     }
   }
 
-  async formatSheet(numColumns) {
+  async formatSheet(sheetId, numColumns) {
     try {
       const requests = [
         // Format header row - bold, background color, centered, borders
         {
           repeatCell: {
             range: {
-              sheetId: 1421067520,
+              sheetId,
               startRowIndex: 0,
               endRowIndex: 1,
               startColumnIndex: 0,
@@ -102,7 +131,7 @@ class SheetsService {
         {
           autoResizeDimensions: {
             dimensions: {
-              sheetId: 1421067520,
+              sheetId,
               dimension: 'COLUMNS',
               startIndex: 0,
               endIndex: numColumns,
@@ -113,7 +142,7 @@ class SheetsService {
         {
           updateBorders: {
             range: {
-              sheetId: 1421067520,
+              sheetId,
               startRowIndex: 0,
               endRowIndex: 1000, // Apply to first 1000 rows
               startColumnIndex: 0,
@@ -155,7 +184,7 @@ class SheetsService {
         {
           updateSheetProperties: {
             properties: {
-              sheetId: 1421067520,
+              sheetId,
               gridProperties: {
                 frozenRowCount: 1,
               },
@@ -167,7 +196,7 @@ class SheetsService {
         {
           updateDimensionProperties: {
             range: {
-              sheetId: 1421067520,
+              sheetId,
               dimension: 'ROWS',
               startIndex: 0,
               endIndex: 1,
@@ -247,7 +276,7 @@ class SheetsService {
       // Append to sheet
       await this.sheets.spreadsheets.values.append({
         spreadsheetId: this.sheetId,
-        range: "'Other Holidays'!A:L",
+        range: `'${this.tabFor(orderData.holiday)}'!A:L`,
         valueInputOption: 'RAW',
         resource: {
           values: [rowData],
@@ -255,7 +284,7 @@ class SheetsService {
       });
 
       // Auto-resize columns after adding data
-      await this.autoResizeColumns(12); // 12 columns total
+      await this.autoResizeColumns(this.tabIds[this.tabFor(orderData.holiday)], 12); // 12 columns total
 
       console.log(`✅ Order ${orderId} added to Google Sheets (Holiday: ${orderData.holiday || 'General'})`);
       return { success: true, orderId };
@@ -265,7 +294,7 @@ class SheetsService {
     }
   }
 
-  async autoResizeColumns(numColumns) {
+  async autoResizeColumns(sheetId, numColumns) {
     try {
       await this.sheets.spreadsheets.batchUpdate({
         spreadsheetId: this.sheetId,
@@ -274,7 +303,7 @@ class SheetsService {
             {
               autoResizeDimensions: {
                 dimensions: {
-                  sheetId: 1421067520,
+                  sheetId,
                   dimension: 'COLUMNS',
                   startIndex: 0,
                   endIndex: numColumns,

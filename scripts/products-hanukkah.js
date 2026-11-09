@@ -7,7 +7,7 @@ function generateQuantityOptions(min, max) {
   return options;
 }
 
-// Product catalog for Mitch's Treats - Hanukkah 2025
+// Product catalog for Mitch's Treats - Hanukkah 2026
 const PRODUCTS = [
   {
     id: 'sofganiyot-strawberry',
@@ -17,6 +17,7 @@ const PRODUCTS = [
     description: 'Traditional jelly donuts with strawberry jam filling.',
     hasFlavorOptions: false,
     defaultFlavor: 'Strawberry Jam',
+    isSufganiyot: true,
     minQuantity: 1,
     quantityOptions: generateQuantityOptions(1, 36)
   },
@@ -34,6 +35,7 @@ const PRODUCTS = [
     description: 'Donuts with premium fillings.',
     hasFlavorOptions: true,
     flavors: ['Nutella', 'Dulce de Leche', 'Vanilla Custard', 'Biscoff', 'Marshmallows', 'Pistachio Cream'],
+    isSufganiyot: true,
     minQuantity: 1,
     quantityOptions: generateQuantityOptions(1, 36)
   },
@@ -42,9 +44,12 @@ const PRODUCTS = [
     name: 'Cake Pops',
     price: 3.00,
     images: ['images/Cake Pops/cakepop.jpg'],
-    description: 'Vanilla cake pops (minimum order of 6).',
-    hasFlavorOptions: false,
-    defaultFlavor: 'Vanilla',
+    description: 'Vanilla cake pops (minimum order of 6). Gluten free option available.',
+    imageBanner: 'Gluten free option available',
+    hasFlavorOptions: true,
+    flavorLabel: 'Option',
+    flavors: ['Regular', 'Gluten Free'],
+    flavorPrices: { 'Regular': 3.00, 'Gluten Free': 3.50 },
     minQuantity: 6,
     quantityOptions: generateQuantityOptions(6, 36)
   },
@@ -97,6 +102,14 @@ const PRODUCTS = [
 
 // Holiday context
 const HOLIDAY = 'Hanukkah';
+
+// Pickup rules (YYYY-MM-DD). Pickups from start until the first night need 10+ sufganiyot total.
+// Same logic as 2025: production starts 8 days before the first night.
+const PICKUP_RULES = {
+  start: '2026-11-26',
+  firstNight: '2026-12-04',
+  minSufganiyotBeforeFirstNight: 10
+};
 
 // Export for use in browser
 if (typeof module !== 'undefined' && module.exports) {

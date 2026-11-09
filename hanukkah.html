@@ -19,12 +19,12 @@
                 <h1 class="logo">Mitch's Treats</h1>
             </div>
             <nav>
+                <a href="hanukkah.html" class="nav-link nav-featured active">Hanukkah</a>
                 <a href="index.html" class="nav-link">Home</a>
                 <a href="challah.html" class="nav-link">Challah & Babka</a>
                 <a href="passover.html" class="nav-link">Passover</a>
                 <a href="valentines.html" class="nav-link">Valentines</a>
                 <a href="purim.html" class="nav-link">Purim</a>
-                <a href="hanukkah.html" class="nav-link active">Hanukkah</a>
             </nav>
         </div>
     </header>
@@ -35,7 +35,7 @@
             <div class="hero-content-compact">
                 <h1 class="hero-title-compact">Celebrate Hanukkah with Delicious Treats</h1>
                 <p class="hero-subtitle-compact">Handcrafted sufganiyot, decorated cookies, and festive treats for your celebration</p>
-                <a href="passover.html" class="btn btn-primary">View Current Menu</a>
+                <a href="#order-section" class="btn btn-primary">Order Now</a>
             </div>
         </div>
     </section>
@@ -43,22 +43,23 @@
     <!-- Hanukkah Notice -->
     <section class="holiday-notice">
         <div class="container">
-            <div class="notice-box orders-closed-banner">
-                <h2 class="notice-title">We are not currently taking Hanukkah orders</h2>
+            <div class="notice-box">
+                <h2 class="notice-title">Important Hanukkah 2026 Information</h2>
                 <div class="notice-content">
-                    <p><strong>Hanukkah 2025 has passed.</strong></p>
-                    <p>Check back next season for our Hanukkah menu!</p>
-                    <p>Browse our current offerings on the <a href="passover.html">Passover page</a>.</p>
+                    <p><strong>Production begins Thursday, November 26, 2026</strong></p>
+                    <p><strong>Pickup dates available starting November 26th</strong> (for earlier dates, please contact me first)</p>
+                    <p><strong>For orders before the first night (Nov. 26 &ndash; Dec. 3), there is a minimum of 10 sufganiyot total per order.</strong></p>
+                    <p class="notice-highlight">Orders for the first night (Dec 4th) should be placed ASAP!</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Order Section -->
-    <div id="order-section" class="order-page orders-closed">
+    <div id="order-section" class="order-page">
         <div class="container">
             <h1 class="page-title">Our Hanukkah Menu</h1>
-            <p class="page-subtitle">Browse our Hanukkah treats below.</p>
+            <p class="page-subtitle">Select your Hanukkah treats below.</p>
 
             <!-- Products Grid -->
             <div id="products-grid" class="products-grid">
@@ -87,7 +88,7 @@
                         </div>
                         <div class="form-group">
                             <label for="pickup-date">Pickup Date *</label>
-                            <input type="date" id="pickup-date" name="pickupDate" required>
+                            <input type="date" id="pickup-date" name="pickupDate" min="2026-11-26" required>
                         </div>
                     </div>
 
@@ -142,7 +143,7 @@
                 </div>
                 <div class="form-actions">
                     <button type="button" id="clear-order-btn" class="btn btn-secondary">Clear Order</button>
-                    <button type="submit" id="submit-order-btn" class="btn btn-primary" form="order-form" disabled>Orders Closed</button>
+                    <button type="submit" id="submit-order-btn" class="btn btn-primary" form="order-form">Submit Order</button>
                 </div>
                 <div id="order-message" class="order-message"></div>
             </section>
